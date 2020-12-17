@@ -1,9 +1,11 @@
-const utils = require('../utils')
+import { importFile } from '../../utils/index.mjs'
+
+const dir = '2020/day01'
+const filename = '1.in'
+let input = importFile(dir, filename).split('\n').map(x => parseInt(x, 10))
+
 
 console.clear()
-
-const filename = '1.in'
-let input = utils.importFile(filename).split('\n').map(x => parseInt(x, 10))
 
 const part1 = () => {
   for(let i = 0; i < input.length - 1; i++) {
