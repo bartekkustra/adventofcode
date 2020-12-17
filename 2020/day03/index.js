@@ -2,6 +2,8 @@ console.clear()
 
 import { importFile } from '../../utils/index.mjs'
 
+console.clear()
+
 const day = '03'
 const dir = `2020/day${day}`
 const filename = `${day}.in`
