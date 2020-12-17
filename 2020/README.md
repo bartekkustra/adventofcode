@@ -1,3 +1,5 @@
+![](https://github.com/bartekkustra/adventofcode/blob/main/2020/imgs/aoc20201217.png?raw=true)
+
 # Advent of Code
 www.adventofcode.com
 
