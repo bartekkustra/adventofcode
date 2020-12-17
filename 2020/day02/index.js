@@ -1,14 +1,15 @@
 import { importFile } from '../../utils/index.mjs'
 
-const dir = '2020/day02'
-const filename = '2.in'
+const day = '02'
+const dir = `2020/day${day}`
+const filename = `${day}.in`
 let input = importFile(dir, filename).split('\n')
 
 console.clear()
 
 const regexp = new RegExp(/(\d{1,})-(\d{1,})\W([a-z]{1}): ([a-z]{1,})/);
 
-const task1 = () => {
+const part1 = () => {
   let validPasswordsCounter = 0;
 
   input.forEach((line) => {
@@ -30,7 +31,7 @@ const task1 = () => {
   return validPasswordsCounter;
 };
 
-const task2 = () => {
+const part2 = () => {
   let validPasswordsCounter = 0;
 
   input.forEach((line) => {
@@ -53,5 +54,10 @@ const task2 = () => {
   return validPasswordsCounter;
 };
 
-console.log(task1())
-console.log(task2())
+console.time('part1')
+console.log('part1:', part1())
+console.timeEnd('part1')
+
+console.time('part2')
+console.log('part2:', part2())
+console.timeEnd('part2')

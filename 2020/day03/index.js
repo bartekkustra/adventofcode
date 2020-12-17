@@ -2,8 +2,9 @@ console.clear()
 
 import { importFile } from '../../utils/index.mjs'
 
-const dir = '2020/day03'
-const filename = '3.in'
+const day = '03'
+const dir = `2020/day${day}`
+const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n')
 
 const multiSteps = [

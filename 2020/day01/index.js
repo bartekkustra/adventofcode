@@ -1,7 +1,8 @@
 import { importFile } from '../../utils/index.mjs'
 
-const dir = '2020/day01'
-const filename = '1.in'
+const day = '01'
+const dir = `2020/day${day}`
+const filename = `${day}.in`
 let input = importFile(dir, filename).split('\n').map(x => parseInt(x, 10))
 
 
@@ -29,5 +30,10 @@ const part2 = () => {
   }
 }
 
-console.log('part1', part1())
-console.log('part2', part2())
+console.time('part1')
+console.log('part1:', part1())
+console.timeEnd('part1')
+
+console.time('part2')
+console.log('part2:', part2())
+console.timeEnd('part2')
