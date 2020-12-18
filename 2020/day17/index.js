@@ -1,21 +1,23 @@
 import { importFile } from '../../utils/index.mjs'
 
 console.clear()
+console.log('------>>>>> 257 sample')
 
 const day = '17'
 const dir = `2020/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).replace(/\r/g, '').split('\n')
 
-const getNeighbours = (x, y, z, _map) => {
-  // let results = new Map()
+const getNeighbours = (x, y, z, _mySet) => {
   let results = 0
   for (let i = x - 1; i <= x + 1; i++) {
     for (let j = y - 1; j <= y + 1; j++) {
       for (let k = z - 1; k <= z + 1; k++) {
         if (i !== x || j !== y || k !== z) {
           const coords = [i, j, k].join(',')
-          _map.has(coords) && _map.get(coords) && results++
+          if(_mySet.has(coords)) {
+            results++
+          }
         }
       }
     }
@@ -42,66 +44,68 @@ const getNeighboursInHypercube = (x, y, z, w, _map) => {
 
 const part1 = () => {
   // 3d input
-  let map = new Map()
+  let mySet = new Set()
   input.forEach((row, y) => {
     for(let x = 0; x < row.length; x++) {
       const active = row[x] === '#'
-      const id = [x, y, 0].join(',')
-      map.set(id, active)
+      if (active) {
+        const id = [x, y, 0].join(',')
+        mySet.add(id)
+      }
     }
   })
   
   for (let cycle = 0; cycle < 6; cycle++) {
-    const coords = map.keys()
+    const coords = mySet
 
     let minObj = {
-      'x': null,
-      'y': null,
-      'z': null,
+      'x': 0,
+      'y': 0,
+      'z': 0,
     }
     let maxObj = {
-      'x': null,
-      'y': null,
-      'z': null,
+      'x': 0,
+      'y': 0,
+      'z': 0,
     }
     let min = new Map(Object.entries(minObj))
     let max = new Map(Object.entries(maxObj))
     for (const key of coords) {
       const [x, y, z] = key.split(',').map(x => parseInt(x, 10))
-      x < min.get('x') && min.set('x', x)
-      y < min.get('y') && min.set('y', y)
-      z < min.get('z') && min.set('z', z)
-      x > max.get('x') && max.set('x', x)
-      y > max.get('y') && max.set('y', y)
-      z > max.get('z') && max.set('z', z)
+      x < min.get('x') ? min.set('x', x) : null
+      y < min.get('y') ? min.set('y', y) : null
+      z < min.get('z') ? min.set('z', z) : null
+      x > max.get('x') ? max.set('x', x) : null
+      y > max.get('y') ? max.set('y', y) : null
+      z > max.get('z') ? max.set('z', z) : null
     }
 
-    const newState = new Map()
+    const newState = new Set([...mySet])
     for (let x = min.get('x') - 1; x <= max.get('x') + 1; x++) {
       for (let y = min.get('y') - 1; y <= max.get('y') + 1; y++) {
         for (let z = min.get('z') - 1; z <= max.get('z') + 1; z++) {
-          const activeNeighbours = getNeighbours(x, y, z, map)
+          const activeNeighbours = getNeighbours(x, y, z, mySet)
           const key = [x, y, z].join(',')
-          const isActive = map.has(key) ? map.get(key) : false
-          if(isActive && (activeNeighbours !== 2 && activeNeighbours !== 3)) {
-            newState.set(key, false)
-          } else if(!isActive && activeNeighbours === 3) {
-            newState.set(key, true)
+          const isActive = mySet.has(key)
+          if (isActive && (activeNeighbours === 2 || activeNeighbours === 3)) {
+            // remains active
           } else {
-            newState.set(key, isActive)
+            newState.delete(key)
           }
+
+          if(!isActive && activeNeighbours === 3) {
+            newState.add(key)
+          } else {
+            // remains inactive
+          }
+
         }
       }
     }
-    map = newState
+    mySet = newState
   }
 
-  let sum = 0
-  let cubes = map.values()
-  for (const cube of cubes) {
-    if (cube) sum++
-  }
-  return sum
+  return mySet.size
 }
 
 const part2 = () => {
