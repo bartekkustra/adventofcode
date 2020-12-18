@@ -5,7 +5,7 @@ console.clear()
 const day = '06'
 const dir = `2020/day${day}`
 const filename = `${day}.in`
-let input = importFile(dir, filename).split('\n\n')
+let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n')
 
 const uniqueValue = (value, index, self) => self.indexOf(value) === index;
 
