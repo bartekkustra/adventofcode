@@ -5,7 +5,7 @@ console.clear()
 const day = '00'
 const dir = `2020/day${day}`
 const filename = `${day}.in`
-let input = importFile(dir, filename).split('\n')
+let input = importFile(dir, filename).replace(/\r/g, '').split('\n')
 
 const part1 = () => {}
 const part2 = () => {}
