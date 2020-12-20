@@ -7,6 +7,7 @@ const dir = `2020/day${day}`
 const filename = `${day}.sample`
 let [inputRules, inputLines] = importFile(dir, filename).replace(/\r/g, '').split('\n\n')
 let rawRules = new Map()
+let rulesMemo = new Map()
 
 inputRules = inputRules.split('\n')
 inputLines = inputLines.split('\n')
@@ -16,28 +17,18 @@ inputRules.forEach(rule => {
   rawRules.set(parseInt(rule[0], 10), rule[1])
 })
 
-let rulesMemo = new Map()
+const computeRules = (ruleKey, ruleData) => {
+  console.log(ruleKey, '->', ruleData)
+  if (rulesMemo.has(ruleKey)) return rulesMemo.get(ruleKey)
 
-const generateRule = (ruleId, ruleData) => {
-  if (rulesMemo.has(ruleId)) return rulesMemo.get(ruleId)
-  ruleData = rawRules.get(ruleId)
-
-  let result = ''
-  if (/^".*"$/.test(ruleData)) {
-    result = ruleData.replace(/"/g, '')
-  } else if (/\|/.test(ruleId)) {
-    console.log(' -> ', rawRules.get(ruleId))
-    const possibilities = rawRules.get(ruleId).split(' | ')
-    result = `(${generateRule(possibilities[0])}|${generateRule(possibilities[1])})`
-  }
-  return result
+  
 }
 
 const part1 = () => {
   console.log('rawRules', rawRules)
-  generateRule(0, rawRules)
-
-  console.log('compiledRules', rulesMemo)
+  rawRules.forEach((rule, key)=> {
+    computeRules(key, rule)
+  })
 }
 
 const part2 = () => {}
