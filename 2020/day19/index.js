@@ -4,7 +4,7 @@ console.clear()
 
 const day = '19'
 const dir = `2020/day${day}`
-const filename = `${day}.in`
+const filename = `${day}.sample2`
 let [inputRules, inputLines] = importFile(dir, filename).replace(/\r/g, '').split('\n\n')
 let rawRules = new Map()
 let rulesMemo = new Map()
@@ -18,6 +18,7 @@ inputRules.forEach(rule => {
 })
 
 const computeRules = (ruleKey) => {
+  // console.log(rawRules)
   const currentRuleData = rawRules.get(ruleKey)
   
   if (rulesMemo.has(ruleKey)) return rulesMemo.get(ruleKey)
@@ -63,6 +64,17 @@ const part2 = () => {
   // update rawRules
   rawRules.set(8, '42 | 42 8')
   rawRules.set(11, '42 31 | 42 11 31')
+
+  console.log(rawRules)
+
+  rawRules.forEach((rule, key) => {
+    computeRules(key)
+  })
+  
+  let ruleZero = new RegExp(`^${rulesMemo.get(0)}$`)
+
+  const validInputLines = inputLines.filter(x => ruleZero.test(x)).length
+  return validInputLines
 }
 
 console.time('part1')
