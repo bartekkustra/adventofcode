@@ -4,7 +4,7 @@ console.clear()
 
 const day = '19'
 const dir = `2020/day${day}`
-const filename = `${day}.sample2`
+const filename = `${day}.in`
 let [inputRules, inputLines] = importFile(dir, filename).replace(/\r/g, '').split('\n\n')
 let rawRules = new Map()
 let rulesMemo = new Map()
@@ -17,7 +17,7 @@ inputRules.forEach(rule => {
   rawRules.set(parseInt(rule[0], 10), rule[1])
 })
 
-const computeRules = (ruleKey) => {
+const generateRuleRegexp = (ruleKey) => {
   const currentRuleData = rawRules.get(ruleKey)
   
   if (rulesMemo.has(ruleKey)) return rulesMemo.get(ruleKey)
@@ -28,17 +28,17 @@ const computeRules = (ruleKey) => {
     rulesMemo.set(ruleKey, result)
   } else if (/\|/.test(currentRuleData)) {
     const options = currentRuleData.split(' | ')
-    result = `(${computeRules(options[0])}|${computeRules(options[1])})`
+    result = `(${generateRuleRegexp(options[0])}|${generateRuleRegexp(options[1])})`
   } else {
     if (currentRuleData === undefined) {
       const keys = ruleKey.split(' ')
       keys.forEach(key => {
-        result += computeRules(parseInt(key, 10))
+        result += generateRuleRegexp(parseInt(key, 10))
       })
     } else {
       const keys = currentRuleData.split(' ')
       keys.forEach(key => {
-        result += computeRules(parseInt(key, 10))
+        result += generateRuleRegexp(parseInt(key, 10))
       })
     }
   }
@@ -49,7 +49,7 @@ const computeRules = (ruleKey) => {
 }
 
 const part1 = () => {
-  computeRules(0)
+  generateRuleRegexp(0)
   
   let ruleZero = new RegExp(`^${rulesMemo.get(0)}$`)
 
@@ -62,8 +62,8 @@ const part2 = () => {
   rawRules.set(8, '42 | 42 8') // 42424242....
   rawRules.set(11, '42 31 | 42 11 31') // 42...31...
 
-  computeRules(42)
-  computeRules(31)
+  generateRuleRegexp(42)
+  generateRuleRegexp(31)
 
   let rule42 = `(?<group42>(${rulesMemo.get(42)})+)`
   let rule31 = `(?<group31>(${rulesMemo.get(31)})+)`
@@ -73,9 +73,11 @@ const part2 = () => {
   inputLines.forEach(line => {
     const valid = rule4231.exec(line)
     if(valid) {
-      const {groups} = valid
-      const matchingRule42 = groups.group42.match(new RegExp(rulesMemo.get(41), 'g')).length
-      const matchingRule31 = groups.group31.match(new RegExp(rulesMemo.get(31), 'g')).length
+      const {group42, group31} = valid.groups
+      const matchingRule42 = group42.match(new RegExp(rulesMemo.get(42), 'g')).length
+      const matchingRule31 = group31.match(new RegExp(rulesMemo.get(31), 'g')).length
+      // 42 must show up more often than 31
+      //  as it is also in rule 8
       if(matchingRule42 > matchingRule31) {
         sum++
       }
