@@ -32,12 +32,12 @@ const part1 = () => {
       }
     }
 
+    
     ingredients.forEach(ing => {
       uniqueIngredients.add(ing)
     })
   })
 
-  // console.log(allergenList)
 
   let keys = [...allergenList.keys()]
 
@@ -47,18 +47,14 @@ const part1 = () => {
         const ingredientName = [...allergenList.get(key)].join('') 
         finalAllergens.set(key, ingredientName)
         allergenList.delete(key)
-
+        
         allergenList.forEach((_value, _key) => {
           allergenList.get(_key).delete(ingredientName)
         })
       }
     })
-    keys = allergenList.keys()
+    keys = [...allergenList.keys()]
   }
-
-  // console.log('--------------------------------------')
-  // console.log('unique', uniqueIngredients)
-  // console.log('final', finalAllergens)
   
   let countIngredients = new Map()
   let sum = 0
@@ -77,9 +73,6 @@ const part1 = () => {
       }
     })
   })
-
-  console.log('unique ingredients:', uniqueIngredients.size)
-  console.log('allergens:', finalAllergens.size)
 
   return sum
 }
