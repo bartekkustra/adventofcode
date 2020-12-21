@@ -16,11 +16,8 @@ input.forEach((line, index) => {
 });
 
 const part1 = () => {
-  let uniqueIngredients = new Set()
   let allergenList = new Map()
   let finalAllergens = new Map()
-  // console.log(food)
-  // console.log('\n----------------------------------\n')
 
   food.forEach((value, key) => {
     const {ingredients, allergens} = value
@@ -31,11 +28,6 @@ const part1 = () => {
         allergenList.set(allergen, new Set(ingredients))
       }
     }
-
-    
-    ingredients.forEach(ing => {
-      uniqueIngredients.add(ing)
-    })
   })
 
 
@@ -74,15 +66,23 @@ const part1 = () => {
     })
   })
 
-  return sum
+  return {finalAllergens, sum}
 }
 
-const part2 = () => {}
+const part2 = (allergens) => {
+  const listOfAllergens = [...allergens.keys()].sort()
+  let ingredientsArr = []
+  listOfAllergens.forEach(allergen => {
+    ingredientsArr.push(allergens.get(allergen))
+  })
+  return ingredientsArr.join(',')
+}
 
 console.time('part1')
-console.log('part1:', part1())
+const {sum, finalAllergens} = part1()
+console.log('part1:', sum)
 console.timeEnd('part1')
 
 console.time('part2')
-console.log('part2:', part2())
+console.log('part2:', part2(finalAllergens))
 console.timeEnd('part2')
