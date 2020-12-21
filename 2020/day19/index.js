@@ -18,7 +18,6 @@ inputRules.forEach(rule => {
 })
 
 const computeRules = (ruleKey) => {
-  // console.log(rawRules)
   const currentRuleData = rawRules.get(ruleKey)
   
   if (rulesMemo.has(ruleKey)) return rulesMemo.get(ruleKey)
@@ -50,9 +49,7 @@ const computeRules = (ruleKey) => {
 }
 
 const part1 = () => {
-  rawRules.forEach((rule, key) => {
-    computeRules(key)
-  })
+  computeRules(0)
   
   let ruleZero = new RegExp(`^${rulesMemo.get(0)}$`)
 
@@ -62,19 +59,29 @@ const part1 = () => {
 
 const part2 = () => {
   // update rawRules
-  rawRules.set(8, '42 | 42 8')
-  rawRules.set(11, '42 31 | 42 11 31')
+  rawRules.set(8, '42 | 42 8') // 42424242....
+  rawRules.set(11, '42 31 | 42 11 31') // 42...31...
 
-  console.log(rawRules)
+  computeRules(42)
+  computeRules(31)
 
-  rawRules.forEach((rule, key) => {
-    computeRules(key)
+  let rule42 = `(?<group42>(${rulesMemo.get(42)})+)`
+  let rule31 = `(?<group31>(${rulesMemo.get(31)})+)`
+  let rule4231 = new RegExp(`^${rule42}${rule31}$`)
+
+  let sum = 0
+  inputLines.forEach(line => {
+    const valid = rule4231.exec(line)
+    if(valid) {
+      const {groups} = valid
+      const matchingRule42 = groups.group42.match(new RegExp(rulesMemo.get(41), 'g')).length
+      const matchingRule31 = groups.group31.match(new RegExp(rulesMemo.get(31), 'g')).length
+      if(matchingRule42 > matchingRule31) {
+        sum++
+      }
+    }
   })
-  
-  let ruleZero = new RegExp(`^${rulesMemo.get(0)}$`)
-
-  const validInputLines = inputLines.filter(x => ruleZero.test(x)).length
-  return validInputLines
+  return sum
 }
 
 console.time('part1')
