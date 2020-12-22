@@ -75,10 +75,13 @@ const part2 = () => {
 
   let previousRounds = new Map() // Map<Number, Map<String, Array>>
   let i = 0
+  let winner;
   if (previousRounds.has(i - 1)) {
     const prev = previousRounds.get(i-1)
     const curr = previousRounds.get(i)
-    console.log(_.isEqual(prev, curr))
+    if(_.isEqual(prev, curr)) {
+      winner = 'Player 1'
+    }
   }
 }
 
