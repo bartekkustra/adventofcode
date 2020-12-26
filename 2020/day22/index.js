@@ -5,7 +5,7 @@ console.clear()
 
 const day = '22'
 const dir = `2020/day${day}`
-const filename = `${day}.sample`
+const filename = `${day}.in`
 
 let players = new Map()
 let input = 
@@ -19,70 +19,105 @@ let input =
 
 /**
  * @name dealCards
- * @description deals cards from the top and updates
- * 'players' map
- * @param {Map<String, Array>} playersMap map of players and cards
+ * @description loops through cards and check which card is higher
+ *              giving the winner both of the cards in order
+ *              high to low
+ * @param {Array<number>} p1 array of cards Player 1 has
+ * @param {Array<number>} p2 array of cards Player 2 has
  * 
- * @returns {boolean} has someone won?
+ * @returns {Array<number>} winning deck of cards
  */
-const dealCards = (playersMap) => {
-  let player1cards = playersMap.get('Player 1')
-  let player2cards = playersMap.get('Player 2')
-  if (player1cards[0] > player2cards[0]) {
-    player1cards.push(player1cards[0], player2cards[0])
-  } else if (player1cards[0] < player2cards[0]) {
-    player2cards.push(player2cards[0], player1cards[0])
-  } else {
-    player1cards.push(player1cards[0])
-    player2cards.push(player2cards[0])
-  }
-  player1cards.shift()
-  player2cards.shift()
-  playersMap.set('Player 1', player1cards)
-  playersMap.set('Player 2', player2cards)
+const dealCards = (p1, p2) => {
+  while(p1.length > 0 && p2.length > 0) {
+    const p1card = p1.shift()
+    const p2card = p2.shift()
   
-  if(player1cards.length === 0 || player2cards.length === 0) return false
-  return true
+    if (p1card > p2card) {
+      // Player 1 wins
+      p1.push(p1card)
+      p1.push(p2card)
+    } else {
+      // Player 2 wins
+      p2.push(p2card)
+      p2.push(p1card)
+    }
+  }
+
+  return p1.length > 0
+    ? p1
+    : p2
+}
+
+/**
+ * @name recursiveRound
+ * @description Deals cards based on set of rules and goes into
+ *              a recursion with new set of cards (excluding those
+ *              that were picked from the top)
+ *
+ * @param {Array<number>} p1
+ * @param {Array<number>} p2
+ * @return {winner: number, deck: Array<number>} returns an object
+ *              that contains id of a winner as well as the winning
+ *              deck of cards
+ */
+const recursiveRound = (p1, p2) => {
+  let winner;
+  let round = 0
+  let previousGames = new Set()
+
+  while(p1.length > 0 && p2.length > 0) {
+    round++
+    
+    const gameState = `${p1.join(',')}#${p2.join(',')}`
+    // console.log('previousGames', previousGames)
+    // console.log(round, gameState)
+    if(previousGames.has(gameState)) {
+      return {winner: 1, deck: p1}
+    }
+    previousGames.add(gameState)
+    
+    const p1card = p1.shift()
+    const p2card = p2.shift()
+    // console.log('  ->', p1, p2)
+    
+    if(p1.length >= p1card && p2.length >= p2card) {
+      const res = recursiveRound(p1.slice(0, p1card), p2.slice(0, p2card))
+      winner = res.winner
+    } else {
+      winner = p1card > p2card ? 1 : 2
+    }
+
+    if(winner == 1) {
+      p1.push(p1card)
+      p1.push(p2card)
+    } else {
+      p2.push(p2card)
+      p2.push(p1card)
+    }
+  }
+
+  return {
+    winner: p1.length > 0 ? 1 : 2,
+    deck: p1.length > 0 ? p1 : p2
+  }
 }
 
 const part1 = () => {
   let GAME1_players = _.cloneDeep(players)
-  let deal = true
-  while(deal) {
-    deal = dealCards(GAME1_players)
-  }
-
-  let winningPlayer;
-  GAME1_players.forEach((cards, name) => {
-    if(cards.length !== 0) winningPlayer = name
-  })
-  
-  const winningCards = GAME1_players.get(winningPlayer)
-  let sum = 0
-  for(let i = 0; i < winningCards.length; i++) {
-    sum += winningCards[i] * (winningCards.length - i)
-  }
-  return sum
+  const winningDeck = dealCards(GAME1_players.get('Player 1'), GAME1_players.get('Player 2'))
+  return winningDeck.reduce((prev, curr, index) => prev + (curr * (winningDeck.length - index)), 0)
 }
 
+
 const part2 = () => {
-  console.log('\n\n—————————— PART 2 ——————————')
-  console.log('       expecting 291')
-  console.log('————————————————————————————\n\n')
-
   let GAME2_players = _.cloneDeep(players)
-  console.log(GAME2_players)
-
-  let previousRounds = new Map() // Map<Number, Map<String, Array>>
-  let i = 0
-  let winner;
-  if (previousRounds.has(i - 1)) {
-    const prev = previousRounds.get(i-1)
-    const curr = previousRounds.get(i)
-    if(_.isEqual(prev, curr)) {
-      winner = 'Player 1'
-    }
-  }
+  const winningData = recursiveRound(GAME2_players.get('Player 1'), GAME2_players.get('Player 2'))
+  // console.log(deck)
+  return winningData
+    .deck
+    .reduce(
+      (prev, curr, index) => 
+        prev + (curr * (winningData.deck.length - index)), 0)
 }
 
 console.time('part1')
