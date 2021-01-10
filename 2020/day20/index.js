@@ -15,6 +15,8 @@ let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n').forEach(x
   tileMap.set(tileId, arr)
 })
 
+let tileMatches = new Map()
+
 const edges = ['top', 'right', 'bottom', 'left']
 const flipped = [false, true]
 
@@ -153,16 +155,41 @@ const part1 = () => {
           const edge1 = getEdge(tile1, tile1edge)
           const edge2 = getEdge(tile2, tile2edge)
           if(edge1 === edge2) {
-            console.log(`FOUND MATCH`, `${tile1edge} ${tile1}\t${tile2edge} ${tile2}`)
+            if(tileMatches.has(tile1)) {
+              let getTileMatches = tileMatches.get(tile1)
+              if(!getTileMatches.includes(tile2)) {
+                getTileMatches.push(tile2)
+                tileMatches.set(tile1, getTileMatches)
+              }
+            } else {
+              tileMatches.set(tile1, [tile2])
+            }
           } else if(edge1 === flipEdge(edge2)) {
-            console.log(`FOUND MATCH`, `${tile1edge} ${tile1}\tflipped ${tile2edge} ${tile2}`)
+            if(tileMatches.has(tile1)) {
+              let getTileMatches = tileMatches.get(tile1)
+              if(!getTileMatches.includes(tile2)) {
+                getTileMatches.push(tile2)
+                tileMatches.set(tile1, getTileMatches)
+              }
+            } else {
+              tileMatches.set(tile1, [tile2])
+            }
           } else if(flipEdge(edge1) === edge2) {
-            console.log(`FOUND MATCH`, `flipped ${tile1edge} ${tile1}`, `${tile2edge} ${tile2}`)
+            if(tileMatches.has(tile1)) {
+              let getTileMatches = tileMatches.get(tile1)
+              if(!getTileMatches.includes(tile2)) {
+                getTileMatches.push(tile2)
+                tileMatches.set(tile1, getTileMatches)
+              }
+            } else {
+              tileMatches.set(tile1, [tile2])
+            }
           }
         })
       })
     }
   }
+  console.log(tileMatches)
 }
 
 const part2 = () => {}
