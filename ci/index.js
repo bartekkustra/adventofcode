@@ -98,10 +98,10 @@ for(let i = 1; i <= 23; i++) {
   readJson(i)
 }
 
-// console.log(allTests)
+console.log(allTests)
 
-const showTimes = true
-// const showTimes = false
+// const showTimes = true
+const showTimes = false
 showTimes && console.time('app')
 showTimes && console.time('findBestShardsNumber')
 const bestTimes = findBestShardsNumber()
@@ -111,7 +111,7 @@ const bestSplit = minMaxDuration(bestTimes)
 showTimes && console.timeEnd('minMaxDuration')
 showTimes && console.time('finalShardsMap')
 const bestSplitNumber = bestSplit[0].index
-console.log(bestSplitNumber)
+// console.log(bestSplitNumber)
 const finalShardsMap = findArraySplits(allTests, bestSplitNumber)
 showTimes && console.timeEnd('finalShardsMap')
 showTimes && console.timeEnd('app')
