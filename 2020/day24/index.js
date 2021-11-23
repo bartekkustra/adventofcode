@@ -69,50 +69,39 @@ const getTile = (theMap, vector) => {
   const pos = convertVectorToPos(vector)
   if(theMap.has(pos)) {
     return theMap.get(pos)
+  }
+}
+
+const flipTile = (pos) => {
+  if(flippedTiles.has(pos)) {
+    flippedTiles.delete(pos)
   } else {
-    return undefined;
+    flippedTiles.set(pos, true)
   }
 }
 
 const part1 = () => {
-  const flipTile = (pos) => {
-    if(flippedTiles.has(pos)) {
-      const current = flippedTiles.get(pos)
-      flippedTiles.set(pos, !current)
-    } else {
-      flippedTiles.set(pos, true)
-    }
-  }
-  
-  const calculateFlippedTiles = () => {
-    let blackTiles = 0
-    const res = flippedTiles.forEach(tile => {
-      tile ? blackTiles++ : null
-    })
-    return blackTiles
-  }
-
-  input.forEach((line, index) => {
+  input.forEach(line => {
     const posAsVector = calculateVector(line)
     const posAsString = convertVectorToPos(posAsVector)
     flipTile(posAsString)
   })
-  const blackTiles = calculateFlippedTiles()
-  return blackTiles
+  return flippedTiles.size
 }
+
 const part2 = () => {
+  const positionsVectors = [
+    {x: 0, y: -1},
+    {x: 1, y: -1},
+    {x: 1, y: 0},
+    {x: 0, y: 1},
+    {x: -1, y: 1},
+    {x: -1, y: 0},
+  ]
   const calculateFlippedNeighbours = (pos) => {
     const vector = convertPosToVector(pos);
 
     let countBlack = 0;
-    let positionsVectors = [
-      {x: 0, y: -1},
-      {x: 1, y: -1},
-      {x: 1, y: 0},
-      {x: 0, y: 1},
-      {x: -1, y: 1},
-      {x: -1, y: 0},
-    ]
 
     positionsVectors.forEach(posvec => {
       const tempVector = {...vector}
@@ -133,14 +122,6 @@ const part2 = () => {
       const vector = convertPosToVector(key);
 
       let countBlack = 0;
-      let positionsVectors = [
-        {x: 0, y: -1},
-        {x: 1, y: -1},
-        {x: 1, y: 0},
-        {x: 0, y: 1},
-        {x: -1, y: 1},
-        {x: -1, y: 0},
-      ]
 
       positionsVectors.forEach(posvec => {
         const tempVector = {...vector}
@@ -153,9 +134,8 @@ const part2 = () => {
         }
       })
     })
-    flippedTiles = new Map(tempTodayTiles)
 
-    flippedTiles.forEach((value, key) => {
+    tempTodayTiles.forEach((value, key) => {
       const blackTiles = calculateFlippedNeighbours(key)
       if (value) { // black tile
 
@@ -182,10 +162,9 @@ const part2 = () => {
 }
 
 console.time('part1')
-console.log('part1:', part1())
+part1()
 console.timeEnd('part1')
-console.log('------')
 
 console.time('part2')
-console.log('part2:', part2())
+part2()
 console.timeEnd('part2')
