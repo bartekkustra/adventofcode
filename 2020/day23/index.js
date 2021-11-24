@@ -9,11 +9,7 @@ let input = importFile(dir, filename).replace(/\r/g, '').split('').map(x => pars
 
 console.log(`input:`, input, '\n\n')
 const part1 = () => {
-  for(let i = 0; i < 10; i++) {
-    const pickup = input.slice(i + 1, i + 4)
-    const destination = 
-    console.log(pickup)
-  }
+  
 }
 const part2 = () => {}
 

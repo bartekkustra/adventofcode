@@ -8,8 +8,8 @@ const filename = `${day}.in`
 let [card, door] = importFile(dir, filename).replace(/\r/g, '').split('\n').map(Number)
 
 const SUBJECT = 7
-// 4347326 14611728 17980581
 const part1 = () => {
+  // Python is so much faster... :|
   const transform = (x, z) => {
     return Math.pow(x, z) % 20201227
   }
