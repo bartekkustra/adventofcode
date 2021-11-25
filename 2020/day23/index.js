@@ -4,7 +4,7 @@ console.clear()
 
 const day = '23'
 const dir = `2020/day${day}`
-const filename = `${day}.sample`
+const filename = `${day}.in`
 let input = importFile(dir, filename).replace(/\r/g, '').split('').map(x => parseInt(x))
 
 console.log('-- START --')
@@ -43,25 +43,43 @@ const part1 = () => {
 
 
 const part2 = () => {
-  // input creator
-  let input2 = [...input]
-  const sortedInput = input.sort()
-  const lowest = parseInt(sortedInput[0])
-  let highest = parseInt(sortedInput[sortedInput.length - 1])
+  const TOTAL_CUPS = 1000000
+  const TOTAL_MOVES = 10000000
   
-  const MAX_ITEMS = 1000000
-  for (let i = highest + 1; i <= MAX_ITEMS; i++) {
-    input2.push(i)
+  const cups = [0]
+  for (let cup = 1; cup <= TOTAL_CUPS; cup++) {
+    let nextCup
+    if (cup <= input.length) {
+      nextCup = input[input.indexOf(cup) + 1] || input.length + 1
+    } else if (cup === TOTAL_CUPS) {
+      nextCup = input[0]
+    } else {
+      nextCup = cup + 1
+    }
+
+    cups[cup] = nextCup
   }
 
-  // game
-  for (let i = 1; i <= 1000; i++) {
-    const pickedUp = [input2[1], input2[2], input2[3]]
-    const destination = getDestination(input2, pickedUp, MAX_ITEMS)
-    const destinationIndex = input2.indexOf(destination)
+  let move = 1
+  let currentCup = input[0]
+  while (move <= TOTAL_MOVES) {
+    const cupOne = cups[currentCup]
+    const cupTwo = cups[cupOne]
+    const cupThree = cups[cupTwo]
+    cups[currentCup] = cups[cupThree]
 
-    input2 = [].concat(input2.slice(4, destinationIndex + 1), ...pickedUp, input2.slice(destinationIndex + 1), input2[0]) // 1.158s @ 100   
+    let destinationCup = currentCup
+    do {
+      destinationCup = destinationCup === 1 ? TOTAL_CUPS : destinationCup - 1
+    } while ([cupOne, cupTwo, cupThree].includes(destinationCup))
+
+    [cups[destinationCup], cups[cupThree]] = [cupOne, cups[destinationCup]]
+    currentCup = cups[currentCup]
+
+    move++
   }
+
+  return cups[1] * cups[cups[1]]
 }
 
 console.time('part1')
