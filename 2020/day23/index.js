@@ -4,13 +4,13 @@ console.clear()
 
 const day = '23'
 const dir = `2020/day${day}`
-const filename = `${day}.in`
+const filename = `${day}.sample`
 let input = importFile(dir, filename).replace(/\r/g, '').split('').map(x => parseInt(x))
 
 console.log('-- START --')
 
-const getDestination = (arr, curr, three, max) => {
-  let currValue = arr[curr]
+const getDestination = (arr, three, max) => {
+  let currValue = arr[0]
   while (true) {
     currValue -= 1
     if (currValue < 1) currValue = max
@@ -25,16 +25,14 @@ const part1 = () => {
 
   const MAX_ITEMS = 9
 
-  let currentIndex = 0
-  for (let i = 1; i <= 100; i++) {
-    const currentLabel = input1[currentIndex]
-    const pickedUp = input1.splice(currentIndex + 1, 3)
-    const destination = getDestination(input1, currentIndex, pickedUp, MAX_ITEMS)
+  for (let i = 1; i <= 10; i++) {
+    const pickedUp = [input1[1], input1[2], input1[3]]
+    const destination = getDestination(input1, pickedUp, MAX_ITEMS)
     const destinationIndex = input1.indexOf(destination)
-    input1.splice(destinationIndex + 1, 0, ...pickedUp)
-    const first = input1.shift()
-    input1.splice(input1.length, 0, first)
+
+    input1 = [].concat(input1.slice(4, destinationIndex + 1), ...pickedUp, input1.slice(destinationIndex + 1), input1[0])
   }
+
   const indexOfOne = input1.indexOf(1)
   let res = ''
   for(let i = 1; i < input1.length; i++) {
@@ -55,14 +53,20 @@ const part2 = () => {
   for (let i = highest + 1; i <= MAX_ITEMS; i++) {
     input2.push(i)
   }
-  
+
   // game
-  let currentIndex = 0
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 1000; i++) {
     const pickedUp = [input2[1], input2[2], input2[3]]
-    const destination = getDestination(input2, currentIndex, pickedUp, MAX_ITEMS)
-    const destinationIndex = input2.indexOf(destination) - 3
-    input2 = [].concat(input[4], ...pickedUp, input2.splice(destinationIndex + 1), input2[0])
+    const destination = getDestination(input2, pickedUp, MAX_ITEMS)
+    const destinationIndex = input2.indexOf(destination)
+
+    input2 = [].concat(input2.slice(4, destinationIndex + 1), ...pickedUp, input2.slice(destinationIndex + 1), input2[0]) // 1.158s @ 100
+    
+    // const a = input2.slice(4, destinationIndex + 1)
+    // // const b = pickedUp
+    // const c = input2.slice(destinationIndex + 1)
+    // const d = input2[0]
+    // input2 = [].concat(a, pickedUp, c, d)
   }
 }
 
