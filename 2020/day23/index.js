@@ -60,13 +60,7 @@ const part2 = () => {
     const destination = getDestination(input2, pickedUp, MAX_ITEMS)
     const destinationIndex = input2.indexOf(destination)
 
-    input2 = [].concat(input2.slice(4, destinationIndex + 1), ...pickedUp, input2.slice(destinationIndex + 1), input2[0]) // 1.158s @ 100
-    
-    // const a = input2.slice(4, destinationIndex + 1)
-    // // const b = pickedUp
-    // const c = input2.slice(destinationIndex + 1)
-    // const d = input2[0]
-    // input2 = [].concat(a, pickedUp, c, d)
+    input2 = [].concat(input2.slice(4, destinationIndex + 1), ...pickedUp, input2.slice(destinationIndex + 1), input2[0]) // 1.158s @ 100   
   }
 }
 
