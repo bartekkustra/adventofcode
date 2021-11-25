@@ -31,7 +31,6 @@ let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n').map(x => 
 })
 
 const part1 = () => {
-  console.log(tilesArr[0])
   
 }
 
