@@ -1,2 +1,2 @@
 @echo off
-nodemon %CD%\2021\day%1
+npx nodemon %CD%\2021\day%1
