@@ -1,3 +1,4 @@
+import { performance } from 'perf_hooks'
 import { importFile } from '../../utils/index.mjs'
 
 const day = '01'
@@ -16,17 +17,30 @@ const part1 = () => {
 }
 
 const part2 = () => {
+  let measurements = []
+  for(let i = 2; i < input.length; i++) {
+    const measurementWindow = [input[i-2], input[i-1], input[i]]
+    const sumOfMeasurementWindow = measurementWindow.reduce((prev, curr) => prev + curr)
+    measurements.push(sumOfMeasurementWindow)
+  }
 
+  let sum = 0
+  for (let i = 1; i < measurements.length; i++) {
+    if (measurements[i-1] < measurements[i]) sum++
+  }
+
+  return sum
 }
 
-console.time('part1')
+const p1start = performance.now()
 const p1 = part1()
-console.timeEnd('part1')
+const p1end = performance.now()
 
-console.time('part2')
+const p2start = performance.now()
 const p2 = part2()
-console.timeEnd('part2')
+const p2end = performance.now()
 
-
+console.log(`part1: ${(p1end - p1start).toFixed(3)}ms`)
 console.log('part1', p1)
+console.log(`part2: ${(p2end - p2start).toFixed(3)}ms`)
 console.log('part2', p2)

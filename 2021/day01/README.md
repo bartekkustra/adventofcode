@@ -1,2 +1,7 @@
-#### part1: 3.366ms
-#### part2: 6.371ms
+## JavaScript
+#### part1: 0.207ms
+#### part2: 0.752ms
+
+## Rust
+#### part1: 101.1µs
+#### part2: 268.3µs
