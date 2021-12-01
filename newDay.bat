@@ -1,5 +1,5 @@
 @echo off
-cd 2020
+cd 2021
 mkdir day%1
 
 echo F|xcopy %CD%\_template\0.in %CD%\day%1\%1.in /q

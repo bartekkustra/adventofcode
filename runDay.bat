@@ -1,2 +1,2 @@
 @echo off
-nodemon %CD%\2020\day%1
+nodemon %CD%\2021\day%1
