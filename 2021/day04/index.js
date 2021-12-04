@@ -47,13 +47,13 @@ const generatePosCheck = (pos) => {
   pos = pos.split(',').map(Number)
   // rowcheck
   let checkRow = []
-  for(let i = 0; i < 5; i++) {
+  for(let i = 0; i < BOARD_SIZE; i++) {
     const newpos = `${pos[0]},${i}`
     checkRow.push(newpos)
   }
   // colcheck
   let checkCol = []
-  for(let i = 0; i < 5; i++) {
+  for(let i = 0; i < BOARD_SIZE; i++) {
     const newpos = `${i},${pos[1]}`
     checkCol.push(newpos)
   }
