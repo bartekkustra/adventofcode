@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { performance } from 'perf_hooks'
 import { importFile } from '../../utils/index.mjs'
 
@@ -6,7 +5,7 @@ console.clear()
 
 const day = '07'
 const dir = `2021/day${day}`
-const filename = `${day}.in`
+const filename = `${day}.sample`
 let input = importFile(dir, filename).split(',').map(Number).sort((a, b) => a - b)
 
 const part1 = () => {
@@ -29,7 +28,13 @@ const part1 = () => {
 let fuelCost = new Map()
 
 const calculateFuelCost = (distance) => {
+  console.log(distance)
   if (fuelCost.has(distance)) return fuelCost.get(distance)
+  if (fuelCost.has(distance - 1)) {
+    const newFuelCost = fuelCost.get(distance - 1) + distance
+    fuelCost.set(distance, newFuelCost)
+    return newFuelCost
+  }
 
   let cost = 0
   for(let i = 0; i <= distance; i++) {
