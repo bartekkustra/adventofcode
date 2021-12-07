@@ -1,12 +1,12 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay } from '../../utils/index.mjs'
 
-const day = '03'
+console.clear()
+
+const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n')
-
-console.clear()
 
 const findMostCommonNumberOnIndex = (bits, idx) => {
   let ones = 0

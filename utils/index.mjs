@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 
 export const importFile = (directory, filename) => 
@@ -19,4 +21,9 @@ export const updateTimes = (p1, p2, dir) => {
       console.log('Updated')
     }
   })
+}
+
+export const getDay = (url) => {
+  const __filename = fileURLToPath(url);
+  return dirname(__filename).replace(/(.*)([0-9]{2})$/, '$2')
 }

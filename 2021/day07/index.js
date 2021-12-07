@@ -1,9 +1,9 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay } from '../../utils/index.mjs'
 
 console.clear()
 
-const day = '07'
+const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split(',').map(Number).sort((a, b) => a - b)

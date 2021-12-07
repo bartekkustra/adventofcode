@@ -1,7 +1,9 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay } from '../../utils/index.mjs'
 
-const day = '02'
+console.clear()
+
+const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n').map(x => {
@@ -10,7 +12,6 @@ let input = importFile(dir, filename).split('\r\n').map(x => {
   return [move, value]
 })
 
-console.clear()
 
 const part1 = () => {
   let pos = {

@@ -1,15 +1,14 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay } from '../../utils/index.mjs'
 
 console.clear()
 
-const BOARD_SIZE = 5
-
-const day = '04'
+const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n\r\n')
 
+const BOARD_SIZE = 5
 const drawnNumbers = input[0].split(',').map(Number)
 const boards = input
   .slice(1)
