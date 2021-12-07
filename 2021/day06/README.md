@@ -1,3 +1,3 @@
 ## JavaScript
-#### part1: 0.213ms
-#### part2: 0.541ms
+#### part1: 0.208ms
+#### part2: 0.513ms
