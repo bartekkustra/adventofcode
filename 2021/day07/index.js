@@ -5,7 +5,7 @@ console.clear()
 
 const day = '07'
 const dir = `2021/day${day}`
-const filename = `${day}.sample`
+const filename = `${day}.in`
 let input = importFile(dir, filename).split(',').map(Number).sort((a, b) => a - b)
 
 const part1 = () => {
@@ -28,7 +28,6 @@ const part1 = () => {
 let fuelCost = new Map()
 
 const calculateFuelCost = (distance) => {
-  console.log(distance)
   if (fuelCost.has(distance)) return fuelCost.get(distance)
   if (fuelCost.has(distance - 1)) {
     const newFuelCost = fuelCost.get(distance - 1) + distance
