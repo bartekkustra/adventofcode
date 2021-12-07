@@ -8,54 +8,39 @@ const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split(',').map(Number).sort((a, b) => a - b)
 
+const calculateFuelCost = (distance) => {
+  if (fuelCost.has(distance)) return fuelCost.get(distance)
+  
+  const newFuelCost = calculateFuelCost(distance - 1) + distance
+  fuelCost.set(distance, newFuelCost)
+  return newFuelCost
+}
+
 const part1 = () => {
-  let tempInput = [...input]
-  while(tempInput.length > 2) {
-    tempInput.pop()
-    tempInput.shift()
+  let left = 0
+  let right = input.length - 1
+
+  while(right - left > 1) {
+    left++
+    right--
   }
 
-  const avg = tempInput.reduce((prev, curr) => prev + curr) / tempInput.length
-  
+  const avg = (input[left] + input[right]) / 2
+
   let fuel = 0
   input.forEach(el => {
-    fuel += Math.abs(el - avg)
+    fuel += el > avg ? el - avg : avg - el
   })
 
   return fuel
 }
 
 let fuelCost = new Map()
-
-const calculateFuelCost = (distance) => {
-  if (fuelCost.has(distance)) return fuelCost.get(distance)
-  if (fuelCost.has(distance - 1)) {
-    const newFuelCost = fuelCost.get(distance - 1) + distance
-    fuelCost.set(distance, newFuelCost)
-    return newFuelCost
-  }
-
-  let cost = 0
-  for(let i = 0; i <= distance; i++) {
-    cost += i
-  }
-  fuelCost.set(distance, cost)
-  return cost
-}
-
+fuelCost.set(0, 0)
 const part2 = () => {
-  let tempInput = [...input]
   const possibleSolutions = new Map()
-  for(let i = tempInput[0]; i < tempInput[tempInput.length - 1]; i++) {
-    let fuel = 0
-    input.forEach(el => {
-      const diff = Math.abs(el - i)
-      const fuelCost = calculateFuelCost(diff)
-      fuel += fuelCost
-    })
-    possibleSolutions.set(i, fuel)
-  }
 
+  input.forEach(el => possibleSolutions.set(el, input.reduce((prev, curr) => prev + calculateFuelCost(Math.abs(curr - el)))))
 
   return Array.from(possibleSolutions, ([idx, v]) => v).sort((a, b) => a - b)[0]
 }
