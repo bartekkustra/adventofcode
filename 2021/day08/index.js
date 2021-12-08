@@ -31,19 +31,6 @@ const digits = {
   'abcdfg': 9,
 }
 
-const lengthByNumber = {
-  0: 6,
-  1: 2,
-  2: 5,
-  3: 5,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 3,
-  8: 7,
-  9: 6,
-}
-
 const digitsByLength = {
   2: [digits['cf']],
   3: [digits['acf']],
@@ -59,83 +46,6 @@ const digitsByLength = {
     digits['abcdfg'],
   ],
   7: [digits['abcdefg']]
-}
-
-const sortPattern = (word) => word.split('').sort().join('')
-
-const findPermutations = (string) => {
-  if (!string || typeof string !== "string"){
-    return "Please enter a string"
-  } else if (string.length < 2 ){
-    return string
-  }
-
-  let permutationsArray = [] 
-   
-  for (let i = 0; i < string.length; i++){
-    let char = string[i]
-
-    if (string.indexOf(char) != i)
-    continue
-
-    let remainingChars = string.slice(0, i) + string.slice(i + 1, string.length)
-
-    for (let permutation of findPermutations(remainingChars)){
-      permutationsArray.push(char + permutation) }
-  }
-  return permutationsArray
-}
-
-const removeLetters = (removeThis, fromThis) => {
-  removeThis = removeThis.split('')
-  removeThis.forEach(letter => fromThis = fromThis.replace(letter, ''))
-  return fromThis
-}
-
-const updateLetters = (m, n, l) => {
-  m.set(n, l)
-
-  m.forEach((el, number) => {
-    if (number !== n) {
-      m.set(number, el.replace(m.get(n), ''))
-    }
-  })
-  return m
-}
-
-const removeFrom = (m, rmarr, valarr) => {
-  rmarr.forEach(which => {
-    let curr = m.get(which)
-    const rgxp = new RegExp(`[${valarr.split('').join('|')}]`, 'g')
-    curr = curr.replace(rgxp, '')
-    m.set(which, curr)
-  })
-  return m
-}
-
-const buildLetters = (m) => {
-  let {
-    top,
-    topLeft,
-    topRight,
-    middle,
-    bottomLeft,
-    bottomRight,
-    bottom
-  } = Object.fromEntries(m)
-  let numbers = {}
-
-  numbers[1] = (topRight + bottomRight).split('').sort().join('')
-  numbers[2] = (top + topRight + middle + bottomLeft + bottom).split('').sort().join('')
-  numbers[3] = (top + topRight + middle + bottomRight + bottom).split('').sort().join('')
-  numbers[4] = (topLeft + topRight + middle + bottomRight).split('').sort().join('')
-  numbers[5] = (top + topLeft + middle + bottomRight + bottom).split('').sort().join('')
-  numbers[6] = (top + topLeft + middle + bottomLeft + bottomRight + bottom).split('').sort().join('')
-  numbers[7] = (top + topRight + bottomRight).split('').sort().join('')
-  numbers[8] = (top + topLeft + topRight + middle + bottomLeft + bottomRight + bottom).split('').sort().join('')
-  numbers[9] = (top + topLeft + topRight + middle + bottomRight + bottom).split('').sort().join('')
-  numbers[0] = (top + topLeft + topRight + bottomLeft + bottomRight + bottom).split('').sort().join('')
-  return numbers
 }
 
 const part1 = () => {
