@@ -2,6 +2,8 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 
+export const LATEST_YEAR = 2021
+
 export const importFile = (directory, filename) => 
   readFileSync(`./${directory}/${filename}`, {encoding: 'utf-8'}, (err, data) => {
     if(err) {
@@ -26,7 +28,16 @@ export const getDay = (url) => {
   return dirname(__filename).replace(/(.*)([0-9]{2})$/, '$2')
 }
 
-export const updateMainBadge = async (year, day, which) => {
+export const updateMainBadge = async (year, day, parts) => {
+  let p1 = false
+  let p2 = false
+  if (parts.p1 !== 0) {
+    p1 = true
+  }
+  if (parts.p2 !== 0) {
+    p2 = true
+  }
+
   const currentCompletion = await readFileSync(
     './utils/completion.json',
     {encoding: 'utf-8'},
@@ -39,25 +50,9 @@ export const updateMainBadge = async (year, day, which) => {
     }
   )
 
-  // const json = {}
-  // for(let y = 2015; y <= 2021; y++) {
-  //   json[y] = {}
-  //   for(let d = 1; d <= 25; d++) {
-  //     if (d < 10) {
-  //       d = `0${d}`
-  //     } else {
-  //       d = `${d}`
-  //     }
-  //     json[y][d] = {
-  //       p1: false,
-  //       p2: false,
-  //     }
-  //   }
-  // }
-
   const parsedData = await JSON.parse(currentCompletion)
-  if (which === 'p1') parsedData[year][day]["p1"] = true
-  if (which === 'p2') parsedData[year][day]["p2"] = true
+  parsedData[year][day]["p1"] = p1
+  parsedData[year][day]["p2"] = p2
 
   const stringOutput = await JSON.stringify(parsedData)
 
@@ -66,4 +61,41 @@ export const updateMainBadge = async (year, day, which) => {
       console.error('Error writing completion.json file', err)
     }
   })
+
+  const pickColor = (v) => {
+    let color = 'lightgrey'
+    if (v > 10) color = 'red'
+    if (v > 20) color = 'orange'
+    if (v > 30) color = 'yellow'
+    if (v > 40) color = 'green'
+    if (v === 50) color = 'brightgreen'
+    return color
+  }
+
+  for(let years = 2015; years <= LATEST_YEAR; years++) {
+    let completed = 0
+    for(let days = 1; days <= 25; days++) {
+      if(days < 10) {
+        days = `0${days}`
+      } else {
+        days = `${days}`
+      }
+      if(parsedData[`${years}`][days]["p1"]) completed++
+      if(parsedData[`${years}`][days]["p2"]) completed++
+    }
+
+    const badge = JSON.stringify({
+      schemaVersion: 1,
+      label: years,
+      message: `${completed}/50`,
+      color: pickColor(completed),
+      style: "for-the-badge"
+    })
+
+    await writeFileSync(`./.github/${years}.json`, badge, (err) => {
+      if (err) {
+        console.error(`Error writing .github/badges/${years}.json`, err)
+      }
+    })
+  }
 }

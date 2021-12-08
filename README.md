@@ -1,4 +1,4 @@
-# This year
+# Latest puzzle
 [![2021](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2021.json)](https://adventofcode.com/about)
 
 ![](https://github.com/bartekkustra/adventofcode/blob/main/aoc.png?raw=true)
