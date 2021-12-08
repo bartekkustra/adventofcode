@@ -1,3 +1,6 @@
+# This year
+[![2021](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2021.json)](https://adventofcode.com/about)
+
 ![](https://github.com/bartekkustra/adventofcode/blob/main/aoc.png?raw=true)
 
 # Advent of Code
@@ -10,19 +13,16 @@ www.adventofcode.com
 # About the challenge
 I'll be posting my solutions and approaches to solve tasks in Advent of Code. I'll do my best to differentiate between part 1 and part 2 (as each task consists of two parts), but I can't promise anything here ;) My main language used in solving that is going to be JavaScript, but I might use Python on some occasions.
 
-# This year
-[![2021](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2021.json)](https://adventofcode.com/2020/about)
-
 # Previous years
-[![2015](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2015.json)](https://adventofcode.com/2020/about)
+[![2015](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2015.json)](https://adventofcode.com/about)
 
-[![2016](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2016.json)](https://adventofcode.com/2020/about)
+[![2016](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2016.json)](https://adventofcode.com/about)
 
-[![2017](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2017.json)](https://adventofcode.com/2020/about)
+[![2017](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2017.json)](https://adventofcode.com/about)
 
-[![2018](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2018.json)](https://adventofcode.com/2020/about)
+[![2018](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2018.json)](https://adventofcode.com/about)
 
-[![2019](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2019.json)](https://adventofcode.com/2020/about)
+[![2019](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2019.json)](https://adventofcode.com/about)
 
 [![2020](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2020.json)](https://adventofcode.com/2020/about)
 

@@ -127,3 +127,5 @@ console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
 updateTimes(p1time, p2time, dir)
+if (p1 !== 0) updateMainBadge(2021, day, 'p1')
+if (p2 !== 0) updateMainBadge(2021, day, 'p2')
