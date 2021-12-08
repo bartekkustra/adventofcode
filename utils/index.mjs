@@ -92,7 +92,7 @@ export const updateMainBadge = async (year, day, parts) => {
       style: "for-the-badge"
     })
 
-    await writeFileSync(`./.github/${years}.json`, badge, (err) => {
+    await writeFileSync(`./.github/badges/${years}.json`, badge, (err) => {
       if (err) {
         console.error(`Error writing .github/badges/${years}.json`, err)
       }
