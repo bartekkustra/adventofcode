@@ -1,10 +1,9 @@
+import { performance } from 'perf_hooks'
+import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
+
 console.clear()
 
-import { importFile } from '../../utils/index.mjs'
-
-console.clear()
-
-const day = '03'
+const day = getDay(import.meta.url)
 const dir = `2020/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n')
@@ -16,33 +15,6 @@ const multiSteps = [
   { stepRight: 7, stepDown: 1, },
   { stepRight: 1, stepDown: 2, },
 ]
-
-const walkAndCountTrees = (map, steps) => {
-  let countTrees = 0
-  let row = 0
-  let col = 0
-  while(row < map.length) {
-    if(map[row][col] === '#') countTrees++
-    row += steps.stepDown
-    col += steps.stepRight
-  }
-  return countTrees
-}
-
-const generateMap = (input, steps) => {
-  let myMap = []
-  const howMuchWider = Math.ceil((steps.stepRight * input.length) / input[0].length)
-  
-  for(let row = 0; row < input.length; row++) {
-    const currentRow = input[row]
-    for(let times = 0; times < howMuchWider; times++) {
-      input[row] += currentRow
-    }
-    myMap.push(input[row])
-  }
-
-  return myMap
-}
 
 const walkAndCountTreesByModulo = (map, steps) => {
   let countTrees = 0
@@ -56,36 +28,23 @@ const walkAndCountTreesByModulo = (map, steps) => {
   return countTrees
 }
 
-const part1 = () => {
-  const steps = {
-    stepRight: 3,
-    stepDown: 1,
-  }
-
-  // generate map
-  const myMap = generateMap(input, steps)
-  return walkAndCountTrees(myMap, steps)
-}
-
+const part1 = () => walkAndCountTreesByModulo(input, multiSteps[1])
 const part2 = () => multiSteps
-  .reduce((prev, curr) => prev *= walkAndCountTrees(generateMap(input, curr), curr), 1)
-
-const part1modulo = () => walkAndCountTreesByModulo(input, multiSteps[0])
-const part2modulo = () => multiSteps
   .reduce((prev, curr) => prev *= walkAndCountTreesByModulo(input, curr), 1)
 
-console.log('generating map approach:')
-console.time('part1')
-console.log('part1', part1())
-console.timeEnd('part1')
-console.time('part2')
-console.log('part2', part2())
-console.timeEnd('part2')
+const p1start = performance.now()
+const p1 = part1()
+const p1end = performance.now()
+const p2start = performance.now()
+const p2 = part2()
+const p2end = performance.now()
 
-console.log('\nmodulo approach:')
-console.time('part1modulo')
-console.log('part1modulo', part1modulo())
-console.timeEnd('part1modulo')
-console.time('part2modulo')
-console.log('part2modulo', part2modulo())
-console.timeEnd('part2modulo')
+const p1time = (p1end - p1start).toFixed(3)
+const p2time = (p2end - p2start).toFixed(3)
+console.log(`part1: ${p1time}ms`)
+console.log('part1', p1)
+console.log(`part2: ${p2time}ms`)
+console.log('part2', p2)
+
+updateTimes(p1time, p2time, dir)
+updateMainBadge(2020, day, {p1, p2})

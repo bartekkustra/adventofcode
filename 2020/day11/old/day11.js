@@ -1,5 +1,4 @@
-const { isBoolean } = require('lodash')
-const _ = require('lodash')
+import _ from 'lodash'
 
 console.log('-------------------------------------------------')
 
@@ -215,16 +214,17 @@ function part2() {
   return seatAtSpecificMoment
 }
 
-// const finalPart1 = part1()
-// let totalSeatsTaken = 0
-// for(let i = 0; i < finalPart1.length; i++) {
-//   for(let j = 0; j < finalPart1[i].length; j++) {
-//     if (finalPart1[i][j] === '#') {
-//       totalSeatsTaken++
-//     }
-//   }
-// }
-// console.log(totalSeatsTaken)
+const finalPart1 = part1()
+console.log('aa')
+let totalSeatsTaken = 0
+for(let i = 0; i < finalPart1.length; i++) {
+  for(let j = 0; j < finalPart1[i].length; j++) {
+    if (finalPart1[i][j] === '#') {
+      totalSeatsTaken++
+    }
+  }
+}
+console.log(totalSeatsTaken)
 
 
 const finalPart2 = part2()

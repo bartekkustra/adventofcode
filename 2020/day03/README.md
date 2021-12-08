@@ -1,7 +1,3 @@
-## generating map approach:
-#### part1: 1.229ms
-#### part2: 6.226ms
-
-## modulo approach:
-#### part1modulo: 8.049ms
-#### part2modulo: 0.366ms
+## JavaScript
+[![Part 1](https://img.shields.io/badge/Part%201-0.073ms-informational)](https://adventofcode.com/2021/)
+[![Part 2](https://img.shields.io/badge/Part%202-0.151ms-informational)](https://adventofcode.com/2021/)

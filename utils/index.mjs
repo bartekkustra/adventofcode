@@ -86,7 +86,7 @@ export const updateMainBadge = async (year, day, parts) => {
 
     const badge = JSON.stringify({
       schemaVersion: 1,
-      label: years,
+      label: `${years}`,
       message: `${completed}/50`,
       color: pickColor(completed),
       style: "for-the-badge"
