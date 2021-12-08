@@ -84,13 +84,13 @@ const p1 = part1()
 const p1end = performance.now()
 
 const p2start = performance.now()
-const p2 = part2()
+const p2 = part2(p1.finalAllergens)
 const p2end = performance.now()
 
 const p1time = (p1end - p1start).toFixed(3)
 const p2time = (p2end - p2start).toFixed(3)
 console.log(`part1: ${p1time}ms`)
-console.log('part1', p1)
+console.log('part1', p1.sum)
 console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 

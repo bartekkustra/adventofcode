@@ -52,5 +52,5 @@ console.log('part1', p1)
 console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
-updateTimes(p1time, p2time, dir)
-updateMainBadge(2020, day, {p1, p2})
+// updateTimes(p1time, p2time, dir)
+// updateMainBadge(2020, day, {p1, p2})
