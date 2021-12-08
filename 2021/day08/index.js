@@ -5,11 +5,11 @@ console.clear()
 
 const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
-const filename = `${day}.sample2`
+const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n').map(x => {
   let [pattern, output] = x.split(' | ')
-  pattern = pattern.split(' ').map(y => y.split(' '))
-  output = output.split(' ').map(y => y.split(' '))
+  pattern = pattern.split(' ').map(y => y.split(' ')).map(x => x.join(''))
+  output = output.split(' ').map(y => y.split(' ')).map(x => x.join(''))
   return {
     pattern,
     output
@@ -86,45 +86,6 @@ const findPermutations = (string) => {
   return permutationsArray
 }
 
-const part1 = () => {
-  let occurance = new Map()
-  occurance.set(1, {
-    count: 0,
-    letters: '',
-  })
-  occurance.set(4, {
-    count: 0,
-    letters: '',
-  })
-  occurance.set(7, {
-    count: 0,
-    letters: '',
-  })
-  occurance.set(8, {
-    count: 0,
-    letters: '',
-  })
-  
-  input.forEach(line => {
-    line.output.forEach(pattern => {
-      pattern.forEach(word => {
-        const prediction = digitsByLength[word.length]
-        if (prediction.length === 1) {
-          const number = prediction[0]
-          const curr = occurance.get(number)
-          curr.count = curr.count + 1
-          curr.letters = word
-          occurance.set(number, curr)
-        }
-      })
-    })
-  })
-  
-  let sum = 0
-  occurance.forEach(x => sum += x.count)
-  return {sum, occurance}
-}
-
 const removeLetters = (removeThis, fromThis) => {
   removeThis = removeThis.split('')
   removeThis.forEach(letter => fromThis = fromThis.replace(letter, ''))
@@ -150,126 +111,6 @@ const removeFrom = (m, rmarr, valarr) => {
     m.set(which, curr)
   })
   return m
-}
-const part2 = () => {
-  let lines = new Map()
-  lines.set('top', 'abcdefg')
-  lines.set('topLeft', 'abcdefg')
-  lines.set('topRight', 'abcdefg')
-  lines.set('middle', 'abcdefg')
-  lines.set('bottomLeft', 'abcdefg')
-  lines.set('bottomRight', 'abcdefg')
-  lines.set('bottom', 'abcdefg')
-  let occurance = new Map()
-  occurance.set(0, 'abcdefg')
-  occurance.set(1, 'abcdefg')
-  occurance.set(2, 'abcdefg')
-  occurance.set(3, 'abcdefg')
-  occurance.set(4, 'abcdefg')
-  occurance.set(5, 'abcdefg')
-  occurance.set(6, 'abcdefg')
-  occurance.set(7, 'abcdefg')
-  occurance.set(8, 'abcdefg')
-  occurance.set(9, 'abcdefg')
-  
-  input.forEach(line => {
-    line.pattern.forEach(pattern => {
-      pattern.forEach(word => {
-        const prediction = digitsByLength[word.length]
-        if (prediction.length === 1) {
-          const number = prediction[0]
-          const curr = occurance.get(number)
-          occurance.set(number, word)
-        }
-      })
-    })
-
-    // 7 from 1
-    const top = removeLetters(occurance.get(1), occurance.get(7))
-    lines.set('top', top)
-    lines = updateLetters(lines, 'top', top)
-    // remove top from 1, 4
-    occurance = removeFrom(occurance, [1,4], top)
-
-    // 4 from 1
-    const topLeftAndMid = removeLetters(occurance.get(1), occurance.get(4))
-    const topRightAndBottomRight = occurance.get(1)
-    
-    const topLeftAndMidArr = topLeftAndMid.split('')
-    const topRightAndBottomRightArr = topRightAndBottomRight.split('')
-
-    let sumOfAll = 0
-
-    for(let i = 0; i < topLeftAndMidArr.length; i++) {
-      for(let j = 0; j < topRightAndBottomRightArr.length; j++) {
-        let createPattern = top
-        let topRight = ''
-        let bottomRight = ''
-        let topLeft = ''
-        let middle = ''
-        // top,topleft,mid,topRight,bottomRight,...rest
-        if (i === 0)  {
-          topLeft = topLeftAndMidArr[0]
-          middle = topLeftAndMidArr[1]
-        } else {
-          topLeft = topLeftAndMidArr[1]
-          middle = topLeftAndMidArr[0]
-        }
-        if (j === 0)  {
-          topRight = topRightAndBottomRightArr[0]
-          bottomRight = topRightAndBottomRightArr[1]
-        } else {
-          topRight = topRightAndBottomRightArr[1]
-          bottomRight = topRightAndBottomRightArr[0]
-        }
-
-        createPattern += topLeft + middle + topRight + bottomRight
-
-        const permStrRgxp = new RegExp(`${top}|${topLeft}|${middle}|${topRight}|${bottomRight}`, 'g')
-        const remainingPermutationsString = 'abcdefg'.replace(permStrRgxp, '')
-        const permutations = findPermutations(remainingPermutationsString)
-        permutations.forEach(perm => {
-          const finalStr = createPattern + perm
-          lines.set('topLeft', finalStr[1])
-          lines.set('middle', finalStr[2])
-          lines.set('topRight', finalStr[3])
-          lines.set('bottomRight', finalStr[4])
-          lines.set('bottomLeft', finalStr[5])
-          lines.set('bottom', finalStr[6])
-
-          const letters = buildLetters(lines)
-          const patt = line.pattern.map(x => x.join('')).map(x => x.split('').sort().join(''))
-          // console.log({letters, patt})
-
-          let num = 0
-          while(patt.length > 0) {
-            if (num >= 10) break
-            const idx = patt.indexOf(patt[num])
-            if(idx > -1) {
-              patt.splice(idx, 1)
-            }
-            num++
-          }
-          if (patt.length === 0) {
-            console.log('found')
-          } else {
-            console.log('nope')
-          }
-          // const out = line.output.map(x => x.join(''))
-          // console.log('output', out)
-          // const lettersKeys = Object.values(letters).map(x => sortPattern(x))
-          // const patt = line.pattern.map(x => x.join('')).map(x => sortPattern(x)).sort()
-          // const currentPattern = sortPattern(line.pattern)
-          // for(let d = 0; d < patt.length; d++) {
-            // if(lettersKeys[d] === patt[d]) {
-              // const finalNumbers = line.output.map(x => x.join(''))
-              // finalNumbers.forEach()
-            // }
-          // }
-        })
-      }
-    }
-  })
 }
 
 const buildLetters = (m) => {
@@ -297,6 +138,102 @@ const buildLetters = (m) => {
   return numbers
 }
 
+const part1 = () => {
+  let occurance = new Map()
+  occurance.set(1, {
+    count: 0,
+    letters: '',
+  })
+  occurance.set(4, {
+    count: 0,
+    letters: '',
+  })
+  occurance.set(7, {
+    count: 0,
+    letters: '',
+  })
+  occurance.set(8, {
+    count: 0,
+    letters: '',
+  })
+  
+  input.forEach(line => {
+    line.output.forEach(word => {
+      const prediction = digitsByLength[word.length]
+      if (prediction.length === 1) {
+        const number = prediction[0]
+        const curr = occurance.get(number)
+        curr.count = curr.count + 1
+        curr.letters = word
+        occurance.set(number, curr)
+      }
+    })
+  })
+  
+  let sum = 0
+  occurance.forEach(x => sum += x.count)
+  return {sum, occurance}
+}
+
+const part2 = () => {
+  let result = 0
+
+  input.forEach(({pattern, output}) => {
+    const findByLength = condition /* : number | function */ => {
+      if (typeof condition === 'number') {
+        const length = condition
+        condition = c => c.length === length
+      }
+      const idx = pattern.findIndex(condition)
+      return pattern.splice(idx, 1)[0]
+    }
+
+    const removeFromArray = (fromThis, removeThis) =>
+      fromThis.split('').filter(x => !removeThis.includes(x)).join('')
+
+    const checkIfIncluded = (checkIfThis, coversThis) =>
+      removeFromArray(coversThis, checkIfThis).length === 0
+
+    // 1, 4, 7, 8 have unique length
+    const numbers = {
+      1: findByLength(2),
+      4: findByLength(4),
+      7: findByLength(3),
+      8: findByLength(7),
+    }
+    
+    // 9 includes 4
+    numbers[9] = findByLength(a => checkIfIncluded(a, numbers[4]))
+    
+    // 0 includes 1, 6 doesnt have it
+    numbers[0] = findByLength(a => (a.length === 6) && checkIfIncluded(a, numbers[1]))
+    numbers[6] = findByLength(6)
+    
+    // 3 includes 7
+    numbers[3] = findByLength(a => checkIfIncluded(a, numbers[7]))
+    
+    // 2 has 4 letters common with 4
+    // 5 has 3 letters common with 4
+    numbers[2] = findByLength(a => removeFromArray(numbers[4], a).length === 2)
+    numbers[5] = findByLength(5)
+    
+    const digits = new Map()
+
+    for(let digit in numbers) {
+      // sort the pattern
+      const sortedNumbers = numbers[digit].split('').sort().join('')
+      digits.set(sortedNumbers, digit)
+    }
+
+    // sort the output from the input lol
+    output = output.map(x => x.split('').sort().join(''))
+    
+    // add the number from the output to the overall result
+    result += +output.map(x => digits.get(x)).join("")
+  })
+  return result
+}
+
 
 
 const p1start = performance.now()
@@ -315,4 +252,4 @@ console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
 updateTimes(p1time, p2time, dir)
-// updateMainBadge(2021, day, {p1, p2})
+updateMainBadge(2021, day, {p1, p2})
