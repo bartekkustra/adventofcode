@@ -8,69 +8,62 @@ const dir = `2021/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).split('\r\n')
 
-const open = ['<', '(', '[', '{']
-const close = ['>', ')', ']', '}']
+const matchClosing = new Map()
+matchClosing.set('<', '>')
+matchClosing.set('(', ')')
+matchClosing.set('[', ']')
+matchClosing.set('{', '}')
+
+const v1 = new Map()
+v1.set(')', 3)
+v1.set(']', 57)
+v1.set('}', 1197)
+v1.set('>', 25137)
+
+const v2 = new Map()
+v2.set(')', 1)
+v2.set(']', 2)
+v2.set('}', 3)
+v2.set('>', 4)
 
 const part1 = () => {
-  const values = {
-    ')': 3,
-    ']': 57,
-    '}': 1197,
-    '>': 25137,
-  }
-  let closings = []
+  let sum = 0
   let incompleteLines = []
-  
-  input.forEach(line => {
-    // debugger
+
+  for(const line of input) {
+    const lineLength = line.length
     const stack = []
-    let pos = 0
     let isCorrupted = false
-    while(pos < line.length) {
+    for(let pos = 0; pos < lineLength; pos++) {
       const c = line[pos]
-      if(open.includes(c)) {
-        stack.push(c)
-        pos++
+      const closing = matchClosing.get(c) || null
+      if (closing) {
+        stack.unshift(closing)
       } else {
-        const charPos = close.findIndex(x => x === c)
-        if (stack[stack.length - 1] === open[charPos]) {
-          stack.pop()
-          pos++
+        if(c === stack[0]) {
+          stack.shift()
         } else {
-          closings.push(line[pos])
+          sum += v1.get(c)
           isCorrupted = true
           break
         }
       }
     }
     !isCorrupted && incompleteLines.push(stack)
-  })
+  }
 
-  let sum = 0
-  closings.forEach(el => {
-    sum += values[el]
-  })
-  
   return {sum, incompleteLines}
 }
 
 const part2 = (lines) => {
-  const values = {
-    ')': 1,
-    ']': 2,
-    '}': 3,
-    '>': 4,
-  }
   let allScores = []
-  lines.forEach(line => {
+  for(const line of lines) {
     let completionScore = 0
-    const newLine = [...line].reverse()
-    for (let x of newLine) {
-      const charPos = open.findIndex(y => y === x)
-      completionScore = (completionScore * 5) + values[close[charPos]]
+    for(let c of line) {
+      completionScore = (completionScore * 5) + v2.get(c)
     }
     allScores.push(completionScore)
-  })
+  }
 
   const sorted = allScores.sort((a, b) => a - b)
   const midPos = Math.floor(sorted.length / 2)
