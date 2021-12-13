@@ -4,6 +4,11 @@ import { readFileSync, writeFileSync } from 'fs'
 
 export const LATEST_YEAR = 2021
 
+export const blocks = {
+  full: '█',
+  empty: '⠀',
+}
+
 export const importFile = (directory, filename) => 
   readFileSync(`./${directory}/${filename}`, {encoding: 'utf-8'}, (err, data) => {
     if(err) {

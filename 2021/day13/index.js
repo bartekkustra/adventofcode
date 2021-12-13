@@ -1,5 +1,5 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay, updateMainBadge, blocks } from '../../utils/index.mjs'
 
 console.clear()
 
@@ -43,9 +43,9 @@ const drawGrid = (g) => {
   for (let row = minY; row <= maxY; row++) {
     for (let col = minX; col <= maxX; col++) {
       if (g.has(`${col},${row}`)) {
-        str += '#'
+        str += blocks.full
       } else {
-        str += '.'
+        str += blocks.empty
       }
     }
     str += '\n'
