@@ -5,7 +5,7 @@ console.clear()
 
 const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
-const filename = `${day}.sample`
+const filename = `${day}.in`
 
 // read input and find unique nodes
 let uniqueNodes = new Set()
@@ -43,6 +43,7 @@ class Graph {
     console.log(this.#nodes)
   }
 
+  // doesnt work
   bfs_search(source, destination) {
     const queue = [source]
     const visited = {}
@@ -67,7 +68,8 @@ class Graph {
     return false
   }
 
-  search(source, destination, visited = {}) {
+  // doesnt work either
+  dfs_search(source, destination, visited = {}) {
     if (visited[source]) return false
     if (source === destination) return true
     
@@ -84,6 +86,62 @@ class Graph {
 
     return false
   }
+
+  // three times is a charm?
+  search(source, visited = new Set(['start'])) {
+    let ans = 0
+    let queue = [{pos: source, caves: visited}]
+    while(queue.length) {
+      const {pos, caves} = queue.shift()
+      if (pos === 'end') {
+        ans++
+        continue
+      }
+      const curr = this.#nodes[pos]
+      for (let neighbour of curr) {
+        if (!caves.has(neighbour)) {
+          let newCaves = new Set(caves)
+          if (neighbour !== neighbour.toUpperCase()) {
+            newCaves.add(neighbour)
+          }
+          queue.push({pos: neighbour, caves: newCaves})
+        }
+      }
+    }
+    return ans
+  }
+
+  searchP2(source, allowTwoVisits, visited = new Set(['start'])) {
+    let ans = 0
+    let queue = [{pos: source, caves: visited, twoVisits: false}]
+    while(queue.length) {
+      const {pos, caves, twoVisits} = queue.shift()
+      if (pos === 'end') {
+        ans++
+        continue
+      }
+      const curr = this.#nodes[pos]
+      for (let neighbour of curr) {
+        if (!caves.has(neighbour)) {
+          let newCaves = new Set(caves)
+          if (neighbour !== neighbour.toUpperCase()) {
+            newCaves.add(neighbour)
+          }
+          queue.push({pos: neighbour, caves: newCaves, twoVisits})
+        } else if (
+          neighbour !== neighbour.toUpperCase() &&
+          !twoVisits &&
+          neighbour !== 'start' &&
+          neighbour !== 'end'
+        ) {
+          queue.push({
+            pos: neighbour, caves, twoVisits: true
+          })
+        }
+      }
+    }
+    return ans
+  }
 }
 
 let g = new Graph()
@@ -98,15 +156,9 @@ for (let edge of input) {
   g.addEgde(edge[0], edge[1])
 }
 
-const part1 = () => {
-  g.showNodes()
-  return g.search('start', 'end')
-}
+const part1 = () => g.search('start')
 
-const part2 = () => {
-  
-  return 0
-}
+const part2 = () => g.searchP2('start', true)
 
 const p1start = performance.now()
 const p1 = part1()
@@ -123,5 +175,5 @@ console.log('part1', p1)
 console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
-// updateTimes(p1time, p2time, dir)
-// updateMainBadge(2021, day, {p1, p2})
+updateTimes(p1time, p2time, dir)
+updateMainBadge(2021, day, {p1, p2})
