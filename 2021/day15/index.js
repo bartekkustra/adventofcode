@@ -6,7 +6,7 @@ console.clear()
 const day = getDay(import.meta.url)
 const dir = `2021/day${day}`
 const filename = `${day}.sample`
-let input = importFile(dir, filename).split('\n').map(x => x.split('').map(Number))
+let input = importFile(dir, filename).split('\r\n').map(x => x.split('').map(Number))
 
 let theMap = new Map()
 const maxRow = input.length
@@ -18,41 +18,71 @@ for (let row = 0; row < maxRow; row++) {
   }
 }
 
-class Graph {
-  #nodes
+const SIZE = 5
+const endP1 = `${input[0].length - 1},${input.length - 1}`
+const endP2 = `${input[0].length * SIZE - 1},${input.length * SIZE - 1}`
 
-  constructor() {
-    this.#nodes = {}
-  }
-
-  addNode(node) {
-    this.#nodes[node] = []
-  }
-
-  addEdge(source, destination) {
-    if (!this.#nodes[source] || !this.#nodes[destination]) return false
-    if (!this.#nodes[source].includes(destination)) {
-      this.#nodes[source].push(destination)
+let theMapBig = new Map()
+const maxRowBig = (input.length) * SIZE
+const maxColBig = (input[0].length) * SIZE
+for (let row = 0; row < maxRowBig; row++) {
+  for (let col = 0; col < maxColBig; col++) {
+    const rowMulti = Math.floor(row / maxRow)
+    const colMulti = Math.floor(col / maxCol)
+    const pos = `${col},${row}`
+    let a = input[row % maxRow][col % maxCol] + rowMulti + colMulti
+    if (a > 9) {
+      a = a % 9
     }
-
-    if (!this.#nodes[destination].includes(source)) {
-      this.#nodes[destination].push(source)
-    }
-  }
-
-  showNodes() {
-    console.log(this.#nodes)
-  }
-
-  search(source, visited = new Set(['0,0']), risk = 0) {
-    let queue = [{pos: source, visited}]
-
+    
+    // let newValue = (input[rowMulti][colMulti] + rowMulti + colMulti) % 9 + 1
+    theMapBig.set(pos, a)
   }
 }
 
-let g = new Graph()
+// DRAW THAT SHIT
+// let str = ''
+// for (let row = 0; row < maxRowBig; row++) {
+//   for (let col = 0; col < maxColBig; col++) {
+//     const pos = `${col},${row}`
+//     str += theMapBig.get(pos)
+//   }
+//   str += '\n'
+// }
+// console.log(str)
+
+class Graph {
+  #nodes
+  #adjacencyList
+  
+  constructor() {
+    this.#nodes = []
+    this.#adjacencyList = {}
+  }
+  
+  addNode(node) {
+    this.#nodes.push(node)
+    this.#adjacencyList[node] = {}
+  }
+  
+  addEdge(node1, node2, weight) {
+    this.#adjacencyList[node1][node2] = weight
+    // this.#adjacencyList[node2][node1] = weight
+  }
+  
+  getList() {
+    return this.#adjacencyList
+  }
+  
+  show() {
+    console.dir({nodes: this.#nodes, list: this.#adjacencyList}, {depth: null})
+  }
+}
+
+// part1 graph
+let g1 = new Graph()
 // add all nodes
-theMap.forEach((value, pos) => g.addNode(pos))
+theMap.forEach((value, pos) => g1.addNode(pos))
 // add edges
 theMap.forEach((value, pos) => {
   const [x,y] = pos.split(',').map(Number)
@@ -62,21 +92,130 @@ theMap.forEach((value, pos) => {
       x: x + vec[0],
       y: y + vec[1],
     }
-    if (newPos.x > 0 && newPos.x < maxCol && newPos.y > 0 && newPos.y < maxRow) {
-      g.addEdge(pos, `${newPos.x},${newPos.y}`)
+    if (newPos.x >= 0 && newPos.x < maxCol && newPos.y >= 0 && newPos.y < maxRow) {
+      const newPosStr = `${newPos.x},${newPos.y}`
+      g1.addEdge(pos, newPosStr, theMap.get(newPosStr))
+    }
+  }
+})
+
+// part1 graph
+let g2 = new Graph()
+// add all nodes
+theMapBig.forEach((value, pos) => g2.addNode(pos))
+// add edges
+theMapBig.forEach((value, pos) => {
+  const [x,y] = pos.split(',').map(Number)
+  const vectors = [[-1, 0], [1, 0], [0, -1], [0, 1]]
+  for (let vec of vectors) {
+    const newPos = {
+      x: x + vec[0],
+      y: y + vec[1],
+    }
+    if (newPos.x >= 0 && newPos.x < maxColBig && newPos.y >= 0 && newPos.y < maxRowBig) {
+      const newPosStr = `${newPos.x},${newPos.y}`
+      g2.addEdge(pos, newPosStr, theMapBig.get(newPosStr))
     }
   }
 })
 
 
-const part1 = () => {
-  return g.search()
+const shortestDistanceNode = (distances, visited) => {
+  // create a default value for shortest
+  let shortest = null
+  
+  // for each node in the distances object
+  for (let node in distances) {
+    // if no node has been assigned to shortest yet
+    // or if the current node's distance is smaller than the current shortest
+    let currentIsShortest = shortest === null || distances[node] < distances[shortest]
+    
+    // and if the current node is in the unvisited set
+    if (currentIsShortest && !visited.includes(node)) {
+      // update shortest to be the current node
+      shortest = node
+    }
+  }
+  return shortest
 }
 
-const part2 = () => {
+const findShortestPath = (graph, startNode, endNode) => {
+  // track distances from the start node using a hash object
+  let distances = {}
+  distances[endNode] = 'Infinity'
+  distances = Object.assign(distances, graph[startNode])
   
-  return 0
+  // track paths using a hash object
+  let parents = { endNode: null }
+  for (let child in graph[startNode]) {
+    parents[child] = startNode
+  }
+  
+  // collect visited nodes
+  let visited = []
+  
+  // find the nearest node
+  let node = shortestDistanceNode(distances, visited)
+  
+  // for that node:
+  while (node) {
+    // find its distance from the start node & its child nodes
+    let distance = distances[node]
+    let children = graph[node]
+    
+    // for each of those child nodes:
+    for (let child in children) {
+      
+      // make sure each child node is not the start node
+      if (String(child) === String(startNode)) {
+        continue
+      } else {
+        // save the distance from the start node to the child node
+        let newdistance = distance + children[child]
+
+        // if there's no recorded distance from the start node to the child node in the distances object
+        // or if the recorded distance is shorter than the previously stored distance from the start node to the child node
+        if (!distances[child] || distances[child] > newdistance) {
+          // save the distance to the object
+          distances[child] = newdistance
+          
+          // record the path
+          parents[child] = node
+        } 
+      }
+    }  
+    
+    // move the current node to the visited set
+    visited.push(node)
+    
+    // move to the nearest neighbor node
+    node = shortestDistanceNode(distances, visited);
+  }
+  
+  // using the stored paths from start node to end node
+  // record the shortest path
+  let shortestPath = [endNode]
+  let parent = parents[endNode]
+  
+  while (parent) {
+    shortestPath.push(parent)
+    parent = parents[parent]
+  }
+  shortestPath.reverse()
+  
+  //this is the shortest path
+  let results = {
+    distance: distances[endNode],
+    path: shortestPath,
+  }
+
+  // return the shortest path & the end node's distance from the start node
+  return results
 }
+
+const part1 = () => findShortestPath(g1.getList(), '0,0', endP1).distance
+
+const part2 = () => findShortestPath(g2.getList(), '0,0', endP2).distance
 
 const p1start = performance.now()
 const p1 = part1()
@@ -93,5 +232,5 @@ console.log('part1', p1)
 console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
-// updateTimes(p1time, p2time, dir)
-// updateMainBadge(2021, day, {p1, p2})
+updateTimes(p1time, p2time, dir)
+updateMainBadge(2021, day, {p1, p2})
