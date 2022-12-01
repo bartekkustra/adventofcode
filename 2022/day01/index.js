@@ -6,7 +6,7 @@ console.clear()
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
 const filename = `${day}.in`
-let input = importFile(dir, filename).split("\r\n\r\n").map(x => x.split('\r\n').map(Number))
+let input = importFile(dir, filename).split('\n\n').map(x => x.split('\r\n').map(Number))
 
 const part1 = () => {
   let most = {

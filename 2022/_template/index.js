@@ -6,7 +6,7 @@ console.clear()
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
 const filename = `${day}.sample`
-let input = importFile(dir, filename).replace(/\r/g, '')
+let input = importFile(dir, filename)
 
 const part1 = () => {
   
