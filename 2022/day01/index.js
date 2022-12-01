@@ -24,7 +24,6 @@ const part2 = () => {
     elfs.push(elf.reduce((prev, curr) => prev + curr))
   }
   return elfs.sort((a, b) => b - a).slice(0, 3).reduce(((prev, curr) => prev + curr), 0)
-  return 0
 }
 
 const p1start = performance.now()
