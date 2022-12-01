@@ -1,5 +1,5 @@
 # Latest puzzle
-[![2021](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2021.json)](https://adventofcode.com/about)
+[![2022](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2022.json)](https://adventofcode.com/about)
 
 ![](https://github.com/bartekkustra/adventofcode/blob/main/aoc.png?raw=true)
 
@@ -25,6 +25,8 @@ I'll be posting my solutions and approaches to solve tasks in Advent of Code. I'
 [![2019](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2019.json)](https://adventofcode.com/about)
 
 [![2020](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2020.json)](https://adventofcode.com/2020/about)
+
+[![2021](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2021.json)](https://adventofcode.com/2020/about)
 
 
 
