@@ -14,7 +14,8 @@ export const importFile = (directory, filename) =>
     if(err) {
       console.error(`Error file parsing file`, err)
     } else {
-      return data.replace(/\r/g, '')
+      console.log({data})
+      // return data.replace(/\r/g, '')
     }
   })
 
