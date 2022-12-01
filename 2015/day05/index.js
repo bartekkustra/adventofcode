@@ -1,14 +1,13 @@
-import md5 from 'md5'
-import { importFile } from '../../utils/index.mjs'
-
-const day = '05'
-const dir = `2015/day${day}`
-const filename = `${day}.in`
-let input = importFile(dir, filename)
-  .replace(/\r/g, '')
-  .split('\n')
+import { performance } from 'perf_hooks'
+import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
 
 console.clear()
+
+const year = 2015
+const day = getDay(import.meta.url)
+const dir = `${year}/day${day}`
+const filename = `${day}.in`
+let input = importFile(dir, filename).replace(/\r/g, '').split('\n')
 
 const isNice = (str) => {
   // bad strings
@@ -72,12 +71,20 @@ const part1 = () => input.filter(string => isNice(string)).length
 
 const part2 = () => input.filter(string => isNicer(string)).length
 
-console.time('part1')
+const p1start = performance.now()
 const p1 = part1()
-console.timeEnd('part1')
-console.log(p1)
+const p1end = performance.now()
 
-console.time('part2')
+const p2start = performance.now()
 const p2 = part2()
-console.timeEnd('part2')
-console.log(p2)
+const p2end = performance.now()
+
+const p1time = (p1end - p1start).toFixed(3)
+const p2time = (p2end - p2start).toFixed(3)
+console.log(`part1: ${p1time}ms`)
+console.log('part1', p1)
+console.log(`part2: ${p2time}ms`)
+console.log('part2', p2)
+
+updateTimes(p1time, p2time, dir)
+updateMainBadge(year, day, {p1, p2})

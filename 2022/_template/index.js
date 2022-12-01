@@ -6,7 +6,7 @@ console.clear()
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
 const filename = `${day}.sample`
-let input = importFile(dir, filename)
+let input = importFile(dir, filename).replace(/\r/g, '')
 
 const part1 = () => {
   
@@ -34,4 +34,4 @@ console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
 
 updateTimes(p1time, p2time, dir)
-updateMainBadge(2021, day, {p1, p2})
+updateMainBadge(2022, day, {p1, p2})

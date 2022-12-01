@@ -1,11 +1,14 @@
 import { performance } from 'perf_hooks'
-import { importFile } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
 
-const day = '06'
-const dir = `2015/day${day}`
-const filename = `${day}.in`
-let input = importFile(dir, filename)
-  .split('\r\n')
+console.clear()
+
+const year = 2015
+const day = getDay(import.meta.url)
+const dir = `${year}/day${day}`
+const filename = `${day}.sample`
+let input = importFile(dir, filename).replace(/\r/g, '')
+  .split('\n')
   .map(x => {
     const [all, instruction, from, to] = x
       .match('^(turn on|toggle|turn off) ([0-9]{1,},[0-9]{1,}) through ([0-9]{1,},[0-9]{1,})')
@@ -23,8 +26,6 @@ let input = importFile(dir, filename)
       }
     }
   })
-
-console.clear()
 
 const runThroughGridPart1 = (grid, inst, from, to) => {
   for (let row = from.x; row <= to.x; row++) {
@@ -96,15 +97,15 @@ const part2 = () => {
       x,y => brightness
     )
   */
- input.forEach(({instruction, from, to}) => {
-   grid = runThroughGridPart2(grid, instruction, from, to)
- })
-   
- let sumOfBrightness = 0
- grid.forEach(brightness => {
-   sumOfBrightness += brightness
- })
- return sumOfBrightness
+  input.forEach(({instruction, from, to}) => {
+    grid = runThroughGridPart2(grid, instruction, from, to)
+  })
+    
+  let sumOfBrightness = 0
+  grid.forEach(brightness => {
+    sumOfBrightness += brightness
+  })
+  return sumOfBrightness
 }
 
 const p1start = performance.now()
@@ -115,7 +116,12 @@ const p2start = performance.now()
 const p2 = part2()
 const p2end = performance.now()
 
-console.log(`part1: ${(p1end - p1start).toFixed(3)}ms`)
+const p1time = (p1end - p1start).toFixed(3)
+const p2time = (p2end - p2start).toFixed(3)
+console.log(`part1: ${p1time}ms`)
 console.log('part1', p1)
-console.log(`part2: ${(p2end - p2start).toFixed(3)}ms`)
+console.log(`part2: ${p2time}ms`)
 console.log('part2', p2)
+
+updateTimes(p1time, p2time, dir)
+updateMainBadge(year, day, {p1, p2})

@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 
-export const LATEST_YEAR = 2021
+export const LATEST_YEAR = 2022
 
 export const blocks = {
   full: '█',
@@ -14,13 +14,13 @@ export const importFile = (directory, filename) =>
     if(err) {
       console.error(`Error file parsing file`, err)
     } else {
-      return data
+      return data.replace(/\r/g, '')
     }
   })
 
 
 export const updateTimes = (p1, p2, dir) => {
-  const readme = `## JavaScript\n[![Part 1](https://img.shields.io/badge/Part%201-${p1}ms-informational)](https://adventofcode.com/2021/)\n[![Part 2](https://img.shields.io/badge/Part%202-${p2}ms-informational)](https://adventofcode.com/2021/)`
+  const readme = `## JavaScript\n[![Part 1](https://img.shields.io/badge/Part%201-${p1}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${p2}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
   writeFileSync(`${dir}/README.md`, readme, (err) => {
     if (err) {
       console.error(`Error writing ${dir}/README.md`, err)

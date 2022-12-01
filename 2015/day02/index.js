@@ -1,14 +1,16 @@
-import { importFile } from '../../utils/index.mjs'
+import { performance } from 'perf_hooks'
+import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
 
-const day = '02'
-const dir = `2015/day${day}`
-const filename = `${day}.in`
+console.clear()
+
+const year = 2015
+const day = getDay(import.meta.url)
+const dir = `${year}/day${day}`
+const filename = `${day}.sample`
 let input = importFile(dir, filename)
   .replace(/\r/g, '')
   .split('\n')
   .map(x => x.split('x'))
-
-console.clear()
 
 const part1 = () => {
   let total = 0
@@ -35,7 +37,20 @@ const part2 = () => {
   return total
 }
 
+const p1start = performance.now()
 const p1 = part1()
-console.log(p1)
+const p1end = performance.now()
+
+const p2start = performance.now()
 const p2 = part2()
-console.log(p2)
+const p2end = performance.now()
+
+const p1time = (p1end - p1start).toFixed(3)
+const p2time = (p2end - p2start).toFixed(3)
+console.log(`part1: ${p1time}ms`)
+console.log('part1', p1)
+console.log(`part2: ${p2time}ms`)
+console.log('part2', p2)
+
+updateTimes(p1time, p2time, dir)
+updateMainBadge(year, day, {p1, p2})
