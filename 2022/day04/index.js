@@ -24,7 +24,7 @@ const loopCountsBoth = (a, b) => {
       within.push(false)
     }
   }
-  return within
+  return within.every(x => x === true)
 }
 
 const loopChecksTrueOnce = (a, b) => {
@@ -39,16 +39,9 @@ const part1 = () => {
   let count = 0
   for (const pair of input) {
     for (const [first, second] of pair) {
-      let firstWithin = loopCountsBoth(first, second)
-      let secondWithin = loopCountsBoth(second, first)
-
-      const firstOverlaps = firstWithin.every(x => x === true)
-      const secondOverlaps = secondWithin.every(x => x === true)
-      let pairOverlap = firstOverlaps || secondOverlaps
-      if (pairOverlap) count++
+      if (loopCountsBoth(first, second) || loopCountsBoth(second, first)) count++
     }
   }
-  
   return count
 }
 
@@ -56,11 +49,7 @@ const part2 = () => {
   let count = 0
   for (const pair of input) {
     for (const [first, second] of pair) {
-      let firstOverlaps = loopChecksTrueOnce(first, second)
-      let secondOverlaps = loopChecksTrueOnce(first, second)
-
-      let pairOverlap = firstOverlaps || secondOverlaps
-      if (pairOverlap) count++
+      if(loopChecksTrueOnce(first, second) || loopChecksTrueOnce(first, second)) count++
     }
   }
   
