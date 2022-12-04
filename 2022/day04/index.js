@@ -15,26 +15,33 @@ const isBetween = (min, max, value) => {
   return value >= min && value <= max
 }
 
+const loopCountsBoth = (a, b) => {
+  let within = []
+  for (let i = a[0]; i <= a[1]; i++) {
+    if (isBetween(b[0], b[1], i)) {
+      within.push(true)
+    } else {
+      within.push(false)
+    }
+  }
+  return within
+}
+
+const loopChecksTrueOnce = (a, b) => {
+  let overlaps = false
+  for (let i = a[0]; i <= a[1]; i++) {
+    if (isBetween(b[0], b[1], i)) overlaps = true
+  }
+  return overlaps
+}
+
 const part1 = () => {
   let count = 0
   for (const pair of input) {
     for (const [first, second] of pair) {
-      let firstWithin = []
-      let secondWithin = []
-      for (let i = first[0]; i <= first[1]; i++) {
-        if (isBetween(second[0], second[1], i)) {
-          firstWithin.push(true)
-        } else {
-          firstWithin.push(false)
-        }
-      }
-      for (let i = second[0]; i <= second[1]; i++) {
-        if (isBetween(first[0], first[1], i)) {
-          secondWithin.push(true)
-        } else {
-          secondWithin.push(false)
-        }
-      }
+      let firstWithin = loopCountsBoth(first, second)
+      let secondWithin = loopCountsBoth(second, first)
+
       const firstOverlaps = firstWithin.every(x => x === true)
       const secondOverlaps = secondWithin.every(x => x === true)
       let pairOverlap = firstOverlaps || secondOverlaps
@@ -49,24 +56,9 @@ const part2 = () => {
   let count = 0
   for (const pair of input) {
     for (const [first, second] of pair) {
-      let firstWithin = []
-      let secondWithin = []
-      for (let i = first[0]; i <= first[1]; i++) {
-        if (isBetween(second[0], second[1], i)) {
-          firstWithin.push(true)
-        } else {
-          firstWithin.push(false)
-        }
-      }
-      for (let i = second[0]; i <= second[1]; i++) {
-        if (isBetween(first[0], first[1], i)) {
-          secondWithin.push(true)
-        } else {
-          secondWithin.push(false)
-        }
-      }
-      const firstOverlaps = firstWithin.some(x => x === true)
-      const secondOverlaps = secondWithin.some(x => x === true)
+      let firstOverlaps = loopChecksTrueOnce(first, second)
+      let secondOverlaps = loopChecksTrueOnce(first, second)
+
       let pairOverlap = firstOverlaps || secondOverlaps
       if (pairOverlap) count++
     }
