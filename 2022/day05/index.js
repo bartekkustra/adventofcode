@@ -30,6 +30,11 @@ for (let index = 0; index < start[0].length; index++) {
     }
   }
 }
+const part1Crates = JSON.parse(JSON.stringify(crates))
+const part2Crates = JSON.parse(JSON.stringify(crates))
+Object.entries(part2Crates).forEach(el => {
+  part2Crates[el[0]] = el[1].join('')
+})
 
 // prepare instructions
 let instructions = []
@@ -45,21 +50,32 @@ for (const instr of initialInstructions) {
 const part1 = () => {
   for (const step of instructions) {
     for (let i = 0; i < step.moves; i++) {
-      const oldCrate = crates[step.fromStack]
-      const newCrate = crates[step.toStack]
+      const oldCrate = part1Crates[step.fromStack]
+      const newCrate = part1Crates[step.toStack]
       const crate = oldCrate.pop()
       newCrate.push(crate)
     }
   }
   
-  return Object.values(crates).reduce((prev, curr) => {
-    return prev + curr[curr.length - 1]
-  }, '')
+  return Object
+    .values(part1Crates)
+    .reduce((prev, curr) => prev + curr[curr.length - 1], '')
 }
 
 const part2 = () => {
-  
-  return 0
+  for (const step of instructions) {
+    let oldCrate = part2Crates[step.fromStack]
+    let newCrate = part2Crates[step.toStack]
+    const startSlice = oldCrate.length - step.moves
+    const grab = oldCrate.slice(-step.moves)
+    oldCrate = oldCrate.slice(0, startSlice)
+    newCrate = newCrate += grab
+    part2Crates[step.fromStack] = oldCrate
+    part2Crates[step.toStack] = newCrate
+  }
+  return Object
+    .values(part2Crates)
+    .reduce((prev, curr) => prev + curr[curr.length - 1], '')
 }
 
 const p1start = performance.now()
