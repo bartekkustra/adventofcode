@@ -42,8 +42,13 @@ const detectFirstMarker2 = (num) => {
 const detectFirstMarker3 = (num) => {
   const all = new Set()
   for (let i = 0; i < input.length; i++) {
-    if (all.size > num) all.delete(input[i-num])
-    all.add(input[i])
+    if (!memo[i]) {
+      memo[i] = input[i]
+    }
+    if (all.size > num) {
+      all.delete(memo[i-num])
+    }
+    all.add(memo[i])
     if (all.size === num) return all
   }
   throw new Error(`Oops, something's wrong.`)
