@@ -39,19 +39,17 @@ const IS_BEATEN_BY = {
 }
 
 const part1 = () => {
-  let score = {
-    santa: 0,
-  }
+  let score = 0
   
   for (const [elf, santa] of input1) {
     if (elf === santa) {
-      score.santa += GAME.draw + GAME[santa]
+      score += GAME.draw + GAME[santa]
     }
     if (BEATS[elf] === santa) {
-      score.santa += GAME.lose + GAME[santa]
+      score += GAME.lose + GAME[santa]
     }
     if (BEATS[santa] === elf) {
-      score.santa += GAME.win + GAME[santa]
+      score += GAME.win + GAME[santa]
     }
   }
 
@@ -59,22 +57,20 @@ const part1 = () => {
 }
 
 const part2 = () => {
-  let score = {
-    santa: 0,
-  }
+  let score = 0
 
   for (const [elf, endsWith] of input2) {
     if (endsWith === 'X') { // lose
       const santa = BEATS[elf]
-      score.santa += GAME.lose + GAME[santa]
+      score += GAME.lose + GAME[santa]
     }
     if (endsWith === 'Y') { // draw
       const santa = elf
-      score.santa += GAME.draw + GAME[santa]
+      score += GAME.draw + GAME[santa]
     }
     if (endsWith === 'Z') { // win
       const santa = IS_BEATEN_BY[elf]
-      score.santa += GAME.win + GAME[santa]
+      score += GAME.win + GAME[santa]
     }
   }
 
