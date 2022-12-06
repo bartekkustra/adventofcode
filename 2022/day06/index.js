@@ -30,8 +30,36 @@ const detectFirstMarker = (numberOfConsecutiveCharacters) => {
   throw new Error(`Couldn't find ${numberofConsecutiveCharacters} consecutive characters.`)
 }
 
-const part1 = () => detectFirstMarker(4)
-const part2 = () => detectFirstMarker(14)
+const detectFirstMarker2 = (num) => {
+  for (let i = num; i < input.length; i++) {
+    const slice = input.slice((i - num), i)
+    if (slice.length === new Set(slice).size) {
+      return i
+    }
+  }
+}
+
+const detectFirstMarker3 = (num) => {
+  const all = new Set()
+  for (let i = 0; i < input.length; i++) {
+    if (all.size > num) all.delete(input[i-num])
+    all.add(input[i])
+    if (all.size === num) return all
+  }
+  throw new Error(`Oops, something's wrong.`)
+}
+
+// APPROACH 1
+// const part1 = () => detectFirstMarker(4)
+// const part2 = () => detectFirstMarker(14)
+
+// APPROACH 2
+// const part1 = () => detectFirstMarker2(4)
+// const part2 = () => detectFirstMarker2(14)
+
+// APPROACH 3
+const part1 = () => Array.from(detectFirstMarker3(4)).flat().join('')
+const part2 = () => Array.from(detectFirstMarker3(14)).flat().join('')
 
 const p1start = performance.now()
 const p1 = part1()
