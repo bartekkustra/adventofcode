@@ -17,14 +17,12 @@ class TreeNode {
   }
 }
 
-let tree = new TreeNode('/')
-
 const addSizes = (node) => {
   if (!node) return 0
   let total = node.size
   if (total !== 0) return total
 
-  if (node.children && node.children.length > 0) {
+  if (node.children.length > 0) {
     for (let child of node.children) {
       total += addSizes(child)
     }
@@ -32,40 +30,18 @@ const addSizes = (node) => {
   return total
 }
 
-// const findNode = (node, targetValue) => {
-//   if (!node) return null;
-//   if (node.value === targetValue) return node;
-//   if (node.children && node.children.length > 0) {
-//     for (let child of node.children) {
-//       let foundNode = findNode(child, targetValue);
-//       if (foundNode) return foundNode;
-//     }
-//   }
-//   return null;
-// }
-
-// const findShallowNode = (node, targetValue) => {
-//   if (!node) return null;
-//   if (node.value === targetValue) return node;
-//   if (node.children && node.children.length > 0) {
-//     for (let child of node.children) {
-//       if (child.value === targetValue) return child
-//     }
-//   }
-//   return null;
-// }
-
 const traverseTree = (node, callback) => {
   if (!node) return
   callback(node)
 
-  if (node.children && node.children.length > 0) {
+  if (node.children.length > 0) {
     for (let child of node.children) {
       traverseTree(child, callback)
     }
   }
 }
 
+let tree = new TreeNode('/')
 let input = importFile(dir, filename).replace(/\r/g, '').split('\n').forEach(x => {
   if (x[0] === '$') {
     // command
@@ -110,7 +86,6 @@ traverseTree(tree, (node) => {
 
 const part1 = () => {
   let sum = 0
-  let trees = []
   traverseTree(tree, (node) => {
     if (node.children.length > 0 && node.size <= 100000) {
       sum += node.size
@@ -125,7 +100,7 @@ const part2 = () => {
   const spaceToFreeUp = 30000000 - 70000000 + tree.size
   let currentSmallestFolder = Infinity
   traverseTree(tree, (node) => {
-    if (node.children && node.children.length > 0 && node.size > spaceToFreeUp && node.size < currentSmallestFolder)
+    if (node.children.length > 0 && node.size > spaceToFreeUp && node.size < currentSmallestFolder)
       currentSmallestFolder = node.size
   })
   return currentSmallestFolder
