@@ -9,6 +9,10 @@ const dir = `${year}/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n').map(x => x.split('\n').map(Number))
 
+
+// oneline version that I don't like but it works
+// const part1 = () => Math.max(...input.map(x => x.reduce((prev, curr) => prev + curr)))
+
 const part1 = () => {
   let most = 0
   for (const elf of input) {
@@ -20,10 +24,25 @@ const part1 = () => {
 
 const part2 = () => {
   let elfs = []
+  let first = -Infinity
+  let second = -Infinity
+  let third = -Infinity
+
   for (const elf of input) {
-    elfs.push(elf.reduce((prev, curr) => prev + curr))
+    let el = elf.reduce((prev, curr) => prev + curr)
+    if (el > first) {
+      third = second
+      second = first
+      first = el
+    } else if (el > second) {
+      third = second
+      second = el
+    } else if (el > third) {
+      third = el
+    }
   }
-  return elfs.sort((a, b) => b - a).slice(0, 3).reduce(((prev, curr) => prev + curr), 0)
+
+  return first + second + third
 }
 
 const p1start = performance.now()
