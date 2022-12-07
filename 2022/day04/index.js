@@ -16,7 +16,7 @@ const isBetween = (min, max, value) => {
 }
 
 const loopCountsBoth = (a, b) => {
-  let within = []
+  return (a[0] >= b[0] && a[1] <= b[1]) || 
   for (let i = a[0]; i <= a[1]; i++) {
     if (isBetween(b[0], b[1], i)) {
       within.push(true)

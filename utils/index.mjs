@@ -12,11 +12,9 @@ export const blocks = {
 export const importFile = (directory, filename) => 
   readFileSync(`./${directory}/${filename}`, {encoding: 'utf-8'}, (err, data) => {
     if(err) {
-      console.error(`Error file parsing file`, err)
-    } else {
-      console.log({data})
-      // return data.replace(/\r/g, '')
+      throw new Error(`Error file parsing file - ${err}`)
     }
+    return data
   })
 
 

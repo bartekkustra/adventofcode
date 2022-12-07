@@ -2,20 +2,18 @@ import { performance } from 'perf_hooks'
 import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
 
 console.clear()
-console.log('\n\n\n------\n\n\n')
 
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
-const filename = `${day}.in`
+const filename = `${day}.sample`
 
 let currentPath = []
 
 class TreeNode {
-  constructor(value, path = [], size = 0, children = []) {
+  constructor(value, size = 0, children = []) {
     this.value = value
     this.size = Number(size)
     this.children = children
-    this.path = path
   }
 }
 
@@ -68,7 +66,7 @@ const traverseTree = (node, callback) => {
   }
 }
 
-let input = importFile(dir, filename).split('\n').forEach(x => {
+let input = importFile(dir, filename).replace(/\r/g, '').split('\n').forEach(x => {
   if (x[0] === '$') {
     // command
     const commands = x.split(' ')
@@ -88,9 +86,9 @@ let input = importFile(dir, filename).split('\n').forEach(x => {
     let parentNode = tree
     let newNode;
     if (size === 'dir') {
-      newNode = new TreeNode(file, currentPath)
+      newNode = new TreeNode(file)
     } else {
-      newNode = new TreeNode(file, currentPath, size)
+      newNode = new TreeNode(file, size)
     }
 
     for (const path of currentPath) {
