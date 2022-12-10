@@ -69,7 +69,7 @@ const part2 = () => {
       x += currentInstruction
     }
   }
-  return overallSignalStrength
+  return 0
 }
 
 const p1start = performance.now()
