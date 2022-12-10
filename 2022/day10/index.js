@@ -1,11 +1,12 @@
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
+import { importFile, updateTimes, getDay, updateMainBadge, blocks } from '../../utils/index.mjs'
 
 console.clear()
+// console.log('\n\n\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
-const filename = `${day}.sample2`
+const filename = `${day}.in`
 let input = importFile(dir, filename)
   .replace(/\r/g, '')
   .split('\n')
@@ -43,33 +44,82 @@ const part1 = () => {
   return overallSignalStrength
 }
 
+const isInSprite = (cycle, spritePos) =>
+  (cycle % 40) - 1 >= (spritePos - 1)
+    &&
+  (cycle % 40) - 1 <= (spritePos + 1)
+
+const drawSprite = (x) => {
+  let str = ''
+  for (let i = 0; i <= x + 3; i++) {
+    if (i >= x - 1 && i <= x + 1) str += "#"
+    else str += "."
+  }
+  console.log('S:', str)
+}
+
 const part2 = () => {
   const p2input = [...input]
   let newInstruction = true
   let currentInstruction;
   let x = 1
-  let NUMBER_OF_CYCLES = 220
-  let overallSignalStrength = 0
+  let NUMBER_OF_CYCLES = 240
+  let crtDisplay = ''
   for (let cycle = 1; cycle <= NUMBER_OF_CYCLES; cycle++) {
-    if ((cycle % 40) - 20 === 0) {
-      overallSignalStrength += cycle * x
+    if (cycle % 40 === 1) {
+      crtDisplay += '\n'
     }
     if (newInstruction) {
       currentInstruction = p2input.pop()
       if (currentInstruction === 'noop') {
+        newInstruction = true
+        if (isInSprite(cycle, x)) {
+          crtDisplay += blocks.full
+        } else {
+          crtDisplay += blocks.empty
+        }
+        // console.log(`\n---- ${cycle} ----`)
+        // console.log('I:', currentInstruction)
+        // console.log('x:', x)
+        // console.log('D:', crtDisplay)
+        // drawSprite(x)
+        // console.log(`--------`)
         continue
       } else {
         newInstruction = false
+        if (isInSprite(cycle, x)) {
+          crtDisplay += blocks.full
+        } else {
+          crtDisplay += blocks.empty
+        }
+        // console.log(`\n---- ${cycle} ----`)
+        // console.log('I:', currentInstruction)
+        // console.log('x:', x)
+        // console.log('D:', crtDisplay)
+        // drawSprite(x)
+        // console.log(`--------`)
         continue
       }
     }
-
+    
     if (!newInstruction) {
+      if (isInSprite(cycle, x)) {
+        crtDisplay += blocks.full
+      } else {
+        crtDisplay += blocks.empty
+      }
+      // console.log(`\n---- ${cycle} ----`)
+      // console.log('I:', currentInstruction)
+      // console.log('x:', x)
+      // console.log('D:', crtDisplay)
+      // drawSprite(x)
+      // console.log(`--------`)
       newInstruction = true
       x += currentInstruction
+      continue
     }
   }
-  return 0
+  return crtDisplay
 }
 
 const p1start = performance.now()
