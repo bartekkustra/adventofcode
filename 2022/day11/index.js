@@ -6,7 +6,7 @@ console.clear()
 
 const day = getDay(import.meta.url)
 const dir = `2022/day${day}`
-const filename = `${day}.sample`
+const filename = `${day}.in`
 let input = importFile(dir, filename)
   .replace(/\r/g, '')
   .split('\n\n')
@@ -160,8 +160,13 @@ const part2 = () => {
     })
   }
 
+  let maxWorryLevel = 1
+  monkeys1.forEach(monkey => {
+    maxWorryLevel *= monkey.test
+  })
+
   const SHOULD_LOG = false
-  const ROUNDS = 20
+  const ROUNDS = 10000
   for (let round = 1; round <= ROUNDS; round++) {
     SHOULD_LOG && console.log(`\n\n ROUND ${round}\n\n`)
     for (let monkeyId = 0; monkeyId < monkeys1.size; monkeyId++) {
@@ -193,7 +198,7 @@ const part2 = () => {
         }
         SHOULD_LOG && console.log(`    Worry level is ${monkey.operation[0]} by ${operationValue} to ${worryLevel}`)
 
-        worryLevel = Math.floor(worryLevel / 3)
+        worryLevel = worryLevel % maxWorryLevel
         SHOULD_LOG && console.log(`    Monkey gets bored with item. Worry level is divided by 3 to ${worryLevel}`)
 
         const isDivisibleBy = worryLevel % monkey.test === 0
@@ -229,8 +234,7 @@ const part2 = () => {
     }
   }).sort((a, b) => b.inspectionCounter - a.inspectionCounter).slice(0,2)
 
-  // return monkeysArr[0].inspectionCounter * monkeysArr[1].inspectionCounter
-  return 0
+  return monkeysArr[0].inspectionCounter * monkeysArr[1].inspectionCounter
 }
 
 const p1start = performance.now()
