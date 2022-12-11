@@ -57,131 +57,61 @@ let input = importFile(dir, filename)
       operation,
       ifTrue,
       ifFalse,
+      inspectionCounter: 0,
     }
   })
 
-const part1 = () => {
+  
+  
   const monkeys1 = new Map()
-  let inp = JSON.parse(JSON.stringify(input))
-  for (const monkey of inp) {
+  const monkeys2 = new Map()
+  let inp1 = JSON.parse(JSON.stringify(input))
+  let inp2 = JSON.parse(JSON.stringify(input))
+  for (const monkey of inp1) {
     monkeys1.set(monkey.monkey, {
-      items: monkey.items,
-      test: monkey.test,
-      operation: monkey.operation,
-      ifTrue: monkey.ifTrue,
-      ifFalse: monkey.ifFalse,
+      items: [...monkey.items],
+      test: 0 + monkey.test,
+      operation: [...monkey.operation],
+      ifTrue: 0 + monkey.ifTrue,
+      ifFalse: 0 + monkey.ifFalse,
+      inspectionCounter: 0,
+    })
+  }
+  for (const monkey of inp2) {
+    monkeys2.set(monkey.monkey, {
+      items: [...monkey.items],
+      test: 0 + monkey.test,
+      operation: [...monkey.operation],
+      ifTrue: 0 + monkey.ifTrue,
+      ifFalse: 0 + monkey.ifFalse,
       inspectionCounter: 0,
     })
   }
 
-  const SHOULD_LOG = false
-  const ROUNDS = 20
-  for (let round = 1; round <= ROUNDS; round++) {
-    SHOULD_LOG && console.log(`\n\n ROUND ${round}\n\n`)
-    for (let monkeyId = 0; monkeyId < monkeys1.size; monkeyId++) {
-      const monkey = monkeys1.get(monkeyId)
-      if (monkey.items.length === 0) continue
-      SHOULD_LOG && console.log(`Monkey ${monkeyId}:`)
-      let originalItems = [...monkey.items]
-      for (const item of originalItems) {
-        monkey.inspectionCounter += 1
-        SHOULD_LOG && console.log(`  Monkey inspects an item with a worry level of ${item}.`)
-        let worryLevel = item
-        let operationValue =
-          monkey.operation[1] === 'old'
-            ? item
-            : Number(monkey.operation[1])
-        switch(monkey.operation[0]) {
-          case '+':
-            worryLevel += operationValue
-            break
-          case '-':
-            worryLevel -= operationValue
-            break
-          case '*':
-            worryLevel *= operationValue
-            break
-          case '/':
-            worryLevel /= operationValue
-            break
-        }
-        SHOULD_LOG && console.log(`    Worry level is ${monkey.operation[0]} by ${operationValue} to ${worryLevel}`)
-
-        worryLevel = Math.floor(worryLevel / 3)
-        SHOULD_LOG && console.log(`    Monkey gets bored with item. Worry level is divided by 3 to ${worryLevel}`)
-
-        const isDivisibleBy = worryLevel % monkey.test === 0
-        if (isDivisibleBy) {
-          SHOULD_LOG && console.log(`    Current worry level is divisible by ${monkey.test}.`)
-          SHOULD_LOG && console.log(`    Item with worry level ${worryLevel} is thrown to monkey ${monkey.ifTrue}`)
-          monkey.items.shift()
-          const newMonkey = monkeys1.get(monkey.ifTrue)
-          newMonkey.items.push(worryLevel)
-          monkeys1.set(monkey.ifTrue, newMonkey)
-        } else {
-          SHOULD_LOG && console.log(`    Current worry level is not divisible by ${monkey.test}.`)
-          SHOULD_LOG && console.log(`    Item with worry level ${worryLevel} is thrown to monkey ${monkey.ifFalse}`)
-          monkey.items.shift()
-          const newMonkey = monkeys1.get(monkey.ifFalse)
-          newMonkey.items.push(worryLevel)
-          monkeys1.set(monkey.ifFalse, newMonkey)
-        }
-      }
-      SHOULD_LOG && console.log('\n')
-    }
-    SHOULD_LOG && console.log('\nAfter round ${round}:')
-    for (let i  = 0; i < monkeys1.size; i++) {
-      SHOULD_LOG && console.log(`Monkey ${i}: ${monkeys1.get(i).items.join(', ')}`)
-    }
-    SHOULD_LOG && console.log('\n')
-  }
-
-  const monkeysArr = Array(...monkeys1).map(x => {
-    return {
-      id: x[0],
-      ...x[1],
-    }
-  }).sort((a, b) => b.inspectionCounter - a.inspectionCounter).slice(0,2)
-
-  return monkeysArr[0].inspectionCounter * monkeysArr[1].inspectionCounter
-}
-
-const part2 = () => {
-  const monkeys1 = new Map()
-  let inp = JSON.parse(JSON.stringify(input))
-  for (const monkey of inp) {
-    monkeys1.set(monkey.monkey, {
-      items: monkey.items,
-      test: monkey.test,
-      operation: monkey.operation,
-      ifTrue: monkey.ifTrue,
-      ifFalse: monkey.ifFalse,
-      inspectionCounter: 0,
-    })
-  }
-
+const calculateMaxWorryLevel = (monkeysSet) => {
   let maxWorryLevel = 1
-  monkeys1.forEach(monkey => {
+  monkeysSet.forEach(monkey => {
     maxWorryLevel *= monkey.test
   })
+  return maxWorryLevel
+}
 
-  const SHOULD_LOG = false
-  const ROUNDS = 10000
+const solve = (ROUNDS, isPart2) => {
+  const monkeysSet = isPart2 ? monkeys1 : monkeys2
+  const maxWorryLevel = isPart2 ? calculateMaxWorryLevel(monkeysSet) : 1
   for (let round = 1; round <= ROUNDS; round++) {
-    SHOULD_LOG && console.log(`\n\n ROUND ${round}\n\n`)
-    for (let monkeyId = 0; monkeyId < monkeys1.size; monkeyId++) {
-      const monkey = monkeys1.get(monkeyId)
+    for (let monkeyId = 0; monkeyId < monkeysSet.size; monkeyId++) {
+      const monkey = monkeysSet.get(monkeyId)
       if (monkey.items.length === 0) continue
-      SHOULD_LOG && console.log(`Monkey ${monkeyId}:`)
       let originalItems = [...monkey.items]
       for (const item of originalItems) {
         monkey.inspectionCounter += 1
-        SHOULD_LOG && console.log(`  Monkey inspects an item with a worry level of ${item}.`)
         let worryLevel = item
         let operationValue =
           monkey.operation[1] === 'old'
             ? item
             : Number(monkey.operation[1])
+          
         switch(monkey.operation[0]) {
           case '+':
             worryLevel += operationValue
@@ -196,38 +126,28 @@ const part2 = () => {
             worryLevel /= operationValue
             break
         }
-        SHOULD_LOG && console.log(`    Worry level is ${monkey.operation[0]} by ${operationValue} to ${worryLevel}`)
 
-        worryLevel = worryLevel % maxWorryLevel
-        SHOULD_LOG && console.log(`    Monkey gets bored with item. Worry level is divided by 3 to ${worryLevel}`)
+        worryLevel = isPart2 ? worryLevel % maxWorryLevel : Math.floor(worryLevel / 3)
 
         const isDivisibleBy = worryLevel % monkey.test === 0
         if (isDivisibleBy) {
-          SHOULD_LOG && console.log(`    Current worry level is divisible by ${monkey.test}.`)
-          SHOULD_LOG && console.log(`    Item with worry level ${worryLevel} is thrown to monkey ${monkey.ifTrue}`)
           monkey.items.shift()
-          const newMonkey = monkeys1.get(monkey.ifTrue)
+          const newMonkey = monkeysSet.get(monkey.ifTrue)
           newMonkey.items.push(worryLevel)
-          monkeys1.set(monkey.ifTrue, newMonkey)
+          monkeysSet.set(monkey.ifTrue, newMonkey)
         } else {
-          SHOULD_LOG && console.log(`    Current worry level is not divisible by ${monkey.test}.`)
-          SHOULD_LOG && console.log(`    Item with worry level ${worryLevel} is thrown to monkey ${monkey.ifFalse}`)
           monkey.items.shift()
-          const newMonkey = monkeys1.get(monkey.ifFalse)
+          const newMonkey = monkeysSet.get(monkey.ifFalse)
           newMonkey.items.push(worryLevel)
-          monkeys1.set(monkey.ifFalse, newMonkey)
+          monkeysSet.set(monkey.ifFalse, newMonkey)
         }
       }
-      SHOULD_LOG && console.log('\n')
     }
-    SHOULD_LOG && console.log('\nAfter round ${round}:')
-    for (let i  = 0; i < monkeys1.size; i++) {
-      SHOULD_LOG && console.log(`Monkey ${i}: ${monkeys1.get(i).items.join(', ')}`)
+    for (let i  = 0; i < monkeysSet.size; i++) {
     }
-    SHOULD_LOG && console.log('\n')
   }
 
-  const monkeysArr = Array(...monkeys1).map(x => {
+  const monkeysArr = Array(...monkeysSet).map(x => {
     return {
       id: x[0],
       ...x[1],
@@ -238,11 +158,11 @@ const part2 = () => {
 }
 
 const p1start = performance.now()
-const p1 = part1()
+const p1 = solve(20, false)
 const p1end = performance.now()
 
 const p2start = performance.now()
-const p2 = part2()
+const p2 = solve(10000, true)
 const p2end = performance.now()
 
 const p1time = (p1end - p1start).toFixed(3)
