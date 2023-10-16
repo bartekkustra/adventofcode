@@ -2,37 +2,59 @@ import { performance } from 'perf_hooks'
 import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index.mjs'
 
 console.clear()
+console.log('-'.repeat(20))
 
 const day = getDay(import.meta.url)
 const dir = `2020/day${day}`
-const filename = `${day}.in`
-const tilesMap = new Map();
-const tilesArr = []
+const filename = `${day}.sample`
 
-const reverseString = str => str.split``.reverse().join``
+/*
+~1. parse the input to separate each tile and its id
+2. for each tile, calculate all of its possible edges (byu rotating and flipping)
+3. for each tile, find its neighbour (tiles that can fir next to it) by comparing edges
+4. assemble the tiles by starting with an arbitrary corner and placing tiles next to it using the neighour information
+5. once the image is assembled, identify the four corner files and multiply their ids together
+*/
 
-const readEdge = ({tile}) => {
-  const result = [tile[0], tile[tile.length - 1], tile.map(x => x[0]).join``, tile.map(x => x[x.length - 1]).join``]
-  const reversed = result.map(x => reverseString(x))
-  return [...result, ...reversed]
-}
-
-let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n').map(x => x.split('\n')).forEach(x => {
-  const tileName = parseInt(x.shift().replace(/(Tile|:)/g, '').trim(), 10)
-  tilesMap.set(tileName, x)
-  const tile = {
-    id: tileName,
-    tile: x,
+let input = importFile(dir, filename).replace(/\r/g, '').split('\n\n').map(x => {
+  const [id, ...data] = x.split('\n')
+  return {
+    id: Number(id.match(/\d+/)[0]),
+    data
   }
-
-  tilesArr.push({
-    ...tile,
-    edges: readEdge(tile)
-  })
 })
 
+const reverseEdge = (edge) => edge.split('').reverse().join('')
+
+const parseTiles = (tile) => {
+  const top = tile.data[0]
+  const bottom = tile.data[tile.data.length - 1]
+  const left = tile.data.map(row => row[0]).join('')
+  const right = tile.data.map(row => row[row.length - 1]).join('')
+  return [top, bottom, left, right, reverseEdge(top), reverseEdge(bottom), reverseEdge(left), reverseEdge(right)]
+}
+
+const findNeighbours = (tile, tiles) => {
+  const tileEdges = parseTiles(tile)
+  const neighbours = []
+  for (const otherTile of tiles) {
+    if (tile.id === otherTile.id) continue
+    const otherEdges = parseTiles(otherTile)
+    for (const edge of tileEdges) {
+      if (otherEdges.includes(edge)) {
+        neighbours.push(otherTile.id)
+        break
+      }
+    }
+  }
+  return neighbours
+}
+
+const findCornerTiles = (tiles) => tiles.filter(tile => findNeighbours(tile, tiles).length === 2).map(tile => tile.id)
+
 const part1 = () => {
-  
+  const cornerTiles = findCornerTiles(input)
+  return cornerTiles.reduce((a, b) => a * b, 1)
 }
 
 const part2 = () => {}
