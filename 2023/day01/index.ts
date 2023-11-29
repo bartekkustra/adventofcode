@@ -1,5 +1,6 @@
+import { getDay, importFile, updateMainBadge, updateTimes } from '../../utils/index'
+
 import { performance } from 'perf_hooks'
-import { importFile, updateTimes, getDay, updateMainBadge } from '../../utils/index'
 
 console.clear()
 
@@ -9,12 +10,12 @@ const dir = `${year}/day${day}`
 const filename = `${day}.in`
 let input = importFile(dir, filename)
 
-const part1 = () => {
+export const part1 = () => {
   
   return 0
 }
 
-const part2 = () => {
+export const part2 = () => {
   
   return 0
 }

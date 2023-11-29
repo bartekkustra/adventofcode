@@ -1,4 +1,3 @@
-import { dirname } from 'path'
 import { readFileSync, writeFileSync } from 'fs'
 
 export const LATEST_YEAR = 2023
