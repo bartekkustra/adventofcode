@@ -1,3 +1,3 @@
 ## JavaScript
-[![Part 1](https://img.shields.io/badge/Part%201-0.089ms-informational)](https://adventofcode.com/2022/)
-[![Part 2](https://img.shields.io/badge/Part%202-0.080ms-informational)](https://adventofcode.com/2022/)
+[![Part 1](https://img.shields.io/badge/Part%201-0.119ms-informational)](https://adventofcode.com/2022/)
+[![Part 2](https://img.shields.io/badge/Part%202-0.118ms-informational)](https://adventofcode.com/2022/)

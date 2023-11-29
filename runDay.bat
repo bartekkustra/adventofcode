@@ -1,2 +1,2 @@
 @echo off
-npx nodemon %CD%\%1\day%2
+npx nodemon --exec ts-node %CD%\%1\day%2
