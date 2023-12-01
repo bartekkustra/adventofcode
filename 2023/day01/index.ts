@@ -56,35 +56,61 @@ export const part1 = (input: string[]): number => {
 }
 
 export const part2 = (input: string[]): number => {
-  const p2Input = input.map((line: string) => {
-    let curr = 0
-    let lineArr = []
-    for (curr; curr < line.length; curr++) {
-      let str = line[curr]
-      if (!isNaN(parseInt(str))) {
-        lineArr.push(Number(str))
-        continue
+  const p2InputPointers = input.map((line: string) => {
+    let leftPointer = 0
+    let rightPointer = line.length - 1
+    let first = undefined
+    let last = undefined
+    
+    while (leftPointer <= rightPointer) {
+      if (first !== undefined && last !== undefined) {
+        break
       }
-      if (isNumberAsString(str)) {
-        let substr = str
-        for (let i = curr + 1; i < line.length; i++) {
-          substr += line[i]
-          if (isNumberAsString(substr)) {
-            const indexOfSubstr = NUMBERS.indexOf(substr)
-            if (indexOfSubstr !== -1) {
-              lineArr.push(indexOfSubstr)
+
+      let leftStr = line[leftPointer]
+      let rightStr = line[rightPointer]
+      let left = Number(leftStr)
+      let right = Number(rightStr)
+      if (!isNaN(left)) {
+        first = left
+      } else {
+        for (let i = leftPointer + 1; i < line.length; i++) {
+          leftStr += line[i]
+          if (NUMBERS.some(n => n.startsWith(leftStr))) {
+            const indexOfNum = NUMBERS.indexOf(leftStr)
+            if (indexOfNum > -1) {
+              first = indexOfNum
               continue
             }
           } else {
             continue
           }
         }
+        leftPointer++
+      }
+
+      if (!isNaN(right)) {
+        last = right
+      } else {
+        for (let i = rightPointer - 1; i >= 0; i--) {
+          rightStr = line[i] + rightStr
+          if (NUMBERS.some(n => n.endsWith(rightStr))) {
+            const indexOfNum = NUMBERS.indexOf(rightStr)
+            if (indexOfNum > -1) {
+              last = indexOfNum
+              continue
+            }
+          } else {
+            continue
+          }
+        }
+        rightPointer--
       }
     }
-    return (lineArr[0] * 10) + lineArr[lineArr.length - 1]
+    return first * 10 + last
   })
 
-  return p2Input.reduce((a, b) => a + b, 0)
+  return p2InputPointers.reduce((a, b) => a + b, 0)
 }
 
 const main = () => {
