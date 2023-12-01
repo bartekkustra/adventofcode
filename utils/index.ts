@@ -7,9 +7,9 @@ export const blocks = {
   empty: '⠀',
 }
 
-export const importFile = (directory: string, filename: string): string => {
+export const importFile = (filename: string): string => {
   try {
-    return readFileSync(`./${directory}/${filename}`, {encoding: 'utf-8'})
+    return readFileSync(`${filename}`, {encoding: 'utf-8'}).replace(/\r/g, '')
   } catch (err) {
     throw new Error(`Error file parsing file - ${err}`)
   }
