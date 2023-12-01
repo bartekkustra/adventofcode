@@ -35,18 +35,16 @@ export const part1 = (input: string[]): number => {
       if (first !== undefined && last !== undefined) {
         break
       }
-      const left = line[leftPointer]
-      const right = line[rightPointer]
-      const leftAsNumber = parseInt(left)
-      const rightAsNumber = parseInt(right)
-      if (!isNaN(leftAsNumber)) {
-        first = leftAsNumber
+      const left = Number(line[leftPointer])
+      const right = Number(line[rightPointer])
+      if (!isNaN(left)) {
+        first = left
       } else {
         leftPointer++
       }
 
-      if (!isNaN(rightAsNumber)) {
-        last = rightAsNumber
+      if (!isNaN(right)) {
+        last = right
       } else {
         rightPointer--
       }
@@ -64,7 +62,7 @@ export const part2 = (input: string[]): number => {
     for (curr; curr < line.length; curr++) {
       let str = line[curr]
       if (!isNaN(parseInt(str))) {
-        lineArr.push(str)
+        lineArr.push(Number(str))
         continue
       }
       if (isNumberAsString(str)) {
@@ -72,8 +70,9 @@ export const part2 = (input: string[]): number => {
         for (let i = curr + 1; i < line.length; i++) {
           substr += line[i]
           if (isNumberAsString(substr)) {
-            if (NUMBERS.includes(substr)) {
-              lineArr.push(NUMBERS.indexOf(substr).toString())
+            const indexOfSubstr = NUMBERS.indexOf(substr)
+            if (indexOfSubstr !== -1) {
+              lineArr.push(indexOfSubstr)
               continue
             }
           } else {
@@ -82,10 +81,10 @@ export const part2 = (input: string[]): number => {
         }
       }
     }
-    return lineArr.join('')
+    return (lineArr[0] * 10) + lineArr[lineArr.length - 1]
   })
 
-  return part1(p2Input)
+  return p2Input.reduce((a, b) => a + b, 0)
 }
 
 const main = () => {
