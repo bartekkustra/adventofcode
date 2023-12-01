@@ -11,6 +11,19 @@ const filename = `${dir}/${day}`
 
 export const parsedInput = (ext?: string): string[] => importFile(filename + '.' + ext).split('\n')
 
+enum ENUMBERS {
+  zero = 0,
+  one = 1,
+  two = 2,
+  three = 3,
+  four = 4,
+  five = 5,
+  six = 6,
+  seven = 7,
+  eight = 8,
+  nine = 9,
+}
+
 const NUMBERS: string[] = [
   'zero',
   'one',
@@ -23,7 +36,6 @@ const NUMBERS: string[] = [
   'eight',
   'nine',
 ]
-const isNumberAsString = (text: string): boolean => NUMBERS.some(num => num.startsWith(text))
 
 export const part1 = (input: string[]): number => {
   const p1Input: number[] = input.map((line: string) => {
@@ -49,7 +61,7 @@ export const part1 = (input: string[]): number => {
         rightPointer--
       }
     }
-    return parseInt(`${first}${last}`)
+    return first * 10 + last
   })
 
   return p1Input.reduce((a, b) => a + b, 0)
@@ -71,6 +83,8 @@ export const part2 = (input: string[]): number => {
       let rightStr = line[rightPointer]
       let left = Number(leftStr)
       let right = Number(rightStr)
+
+      // left -> right
       if (!isNaN(left)) {
         first = left
       } else {
@@ -89,6 +103,7 @@ export const part2 = (input: string[]): number => {
         leftPointer++
       }
 
+      // right -> left
       if (!isNaN(right)) {
         last = right
       } else {

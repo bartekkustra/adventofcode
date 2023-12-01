@@ -4,42 +4,35 @@ import { performance } from 'perf_hooks'
 
 console.clear()
 
-const SAMPLE: boolean = true
-
-interface IInput {
-  [k: string]: any
-}
-
-type TInput = string | IInput
-
 const year = 2023
 const day = getDay(__dirname)
 const dir = `${year}/day${day}`
-const filename = `${dir}/${day}.${SAMPLE ? 'sample' : 'in'}`
+const filename = `${dir}/${day}`
 
-export const parsedInput = (): TInput => importFile(filename)
+export const parsedInput = (ext?: string): string[] => importFile(filename + '.' + ext).split('\n')
 
-export const part1 = (input: TInput) => {
-  
+
+export const part1 = (input: string[]): number => {
+
   return 0
 }
 
-export const part2 = (input: TInput) => {
-  
+export const part2 = (input: string[]): number => {
+
   return 0
 }
 
 const main = () => {
   const p0start = performance.now()
-  const p0 = parsedInput()
+  const p0 = parsedInput('in')
   const p0end = performance.now()
 
   const p1start = performance.now()
-  const p1 = part1(parsedInput)
+  const p1 = part1(parsedInput('sample'))
   const p1end = performance.now()
   
   const p2start = performance.now()
-  const p2 = part2(parsedInput)
+  const p2 = part2(parsedInput('sample'))
   const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)
