@@ -11,19 +11,6 @@ const filename = `${dir}/${day}`
 
 export const parsedInput = (ext?: string): string[] => importFile(filename + '.' + ext).split('\n')
 
-enum ENUMBERS {
-  zero = 0,
-  one = 1,
-  two = 2,
-  three = 3,
-  four = 4,
-  five = 5,
-  six = 6,
-  seven = 7,
-  eight = 8,
-  nine = 9,
-}
-
 const NUMBERS: string[] = [
   'zero',
   'one',
