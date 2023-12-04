@@ -81,8 +81,8 @@ const main = () => {
   console.log(`part2: ${p2time}ms`)
   console.log('part2', p2)
   
-  // updateTimes(p1time, p2time, dir)
-  // updateMainBadge(year, day, {p1, p2})
+  updateTimes(p1time, p2time, dir)
+  updateMainBadge(year, day, {p1, p2})
 }
 
 if (require.main === module) {
