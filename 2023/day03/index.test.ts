@@ -4,8 +4,8 @@ import { parsedInput, part1, part2 } from './index'
 const TODAY = `${LATEST_YEAR}/${getDay(__dirname)}`
 
 const SAMPLE_RESULTS = {
-  part1: 8,
-  part2: 2286,
+  part1: 4361,
+  part2: 467835,
 }
 
 describe(TODAY, () => {
