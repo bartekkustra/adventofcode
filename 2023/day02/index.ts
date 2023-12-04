@@ -78,8 +78,34 @@ export const part1 = (input: Game[]): number => {
 }
 
 export const part2 = (input: Game[]): number => {
-  
-  return 0
+  let sumOfPowers = 0
+  for (const game of input) {
+    let lowestArr: any = {
+      red: [],
+      green: [],
+      blue: [],
+    }
+    let lowest: any = {
+      red: 0,
+      green: 0,
+      blue: 0,
+    }
+
+    for (const set of game.sets) {
+      Object.keys(set).forEach((key: string) => {
+        lowestArr[key].push(set[key])
+      })
+      Object.keys(set).forEach((key: string) => {
+        lowest[key] = Math.max(...lowestArr[key])
+      })
+    }
+
+    const values: number[] = Object.values(lowest)
+
+    const powerOfCubes: number = values.reduce((a: any, b: any) => a * b, 1)
+    sumOfPowers += powerOfCubes
+  }
+  return sumOfPowers
 }
 
 const main = () => {
@@ -91,22 +117,22 @@ const main = () => {
   const p1 = part1(parsedInput('in'))
   const p1end = performance.now()
   
-  // const p2start = performance.now()
-  // const p2 = part2(parsedInput('sample'))
-  // const p2end = performance.now()
+  const p2start = performance.now()
+  const p2 = part2(parsedInput('in'))
+  const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)
   const p1time = (p1end - p1start).toFixed(3)
-  // const p2time = (p2end - p2start).toFixed(3)
+  const p2time = (p2end - p2start).toFixed(3)
   console.log(`input: ${p0time}ms`)
   console.log('---')
   console.log(`part1: ${p1time}ms`)
   console.log('part1', p1)
-  // console.log(`part2: ${p2time}ms`)
-  // console.log('part2', p2)
+  console.log(`part2: ${p2time}ms`)
+  console.log('part2', p2)
   
-  // updateTimes(p1time, p2time, dir)
-  // updateMainBadge(year, day, {p1, p2})
+  updateTimes(p1time, p2time, dir)
+  updateMainBadge(year, day, {p1, p2})
 }
 
 if (require.main === module) {
