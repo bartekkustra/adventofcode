@@ -9,9 +9,16 @@ const day = getDay(__dirname)
 const dir = `${year}/day${day}`
 const filename = `${dir}/${day}`
 
-export const parsedInput = (ext?: string):any => importFile(filename + '.' + ext)
+interface Scratchpad {
+  cardId: number;
+  winningNumbers: number[];
+  yourNumbers: number[];
+  won: number[];
+}
+
+export const parsedInput = (ext?: string): Scratchpad[] => importFile(filename + '.' + ext)
   .split('\n')
-  .map(line => {
+  .reduce((acc, line) => {
     let [_cardId, scratchpad] = line.split(':')
     const cardId = Number(_cardId.split(/\s/).filter(Boolean)[1])
     let [_winningNumbers, _yourNumbers] = scratchpad.split('|')
@@ -19,43 +26,33 @@ export const parsedInput = (ext?: string):any => importFile(filename + '.' + ext
     const yourNumbers = _yourNumbers.split(/\s/).filter(Boolean).map(Number)
     const won = yourNumbers.filter((number: number) => winningNumbers.includes(number))
 
-    return { cardId, winningNumbers, yourNumbers, won }
-  })
+    acc.push({ cardId, winningNumbers, yourNumbers, won })
+    return acc
+  }, [] as Scratchpad[])
 
-export const part1 = (input: any[]): number => {
-  let sumofPoints = 0
-  for (const scratchpad of input) {
+export const part1 = (input: Scratchpad[]): number => {
+  return input.reduce((sum, scratchpad) => {
     const points = 2**(scratchpad.won.length - 1)
-    sumofPoints += points >= 1 ? points : 0
-  }
-  return sumofPoints
+    return sum + (points >= 1 ? points : 0)
+  }, 0)
 }
-/*
-  card 1: 1, 
-  card 2: 2
-  card 3: 4,
-  card 4: 8,
-  card 5: 14,
-  card 6: 1,
-  total: 30
-*/
 
 export const part2 = (input: any[]): number => {
   const numberOfScratchPads: Map<number, any> = new Map()
-  let currentIteration = 1
+  const inputMap: Map<number, any> = new Map(input.map(x => [x.cardId, x.won.length]))
 
-  while(currentIteration <= input.length) {
+  for (let currentIteration = 1; currentIteration <= input.length; currentIteration++) {
     let curr = numberOfScratchPads.get(currentIteration) || 0
     numberOfScratchPads.set(currentIteration, curr + 1)
-    curr = numberOfScratchPads.get(currentIteration) || 90
+    curr = numberOfScratchPads.get(currentIteration)
+
     for (let i = 1; i <= curr; i++) {
-      const {cardId, won} = input.filter(x => x.cardId === currentIteration)[0]
-      for (let j = 1; j <= won.length; j++) {
-        const subCurr = numberOfScratchPads.get(cardId + j) || 0
-        numberOfScratchPads.set(cardId + j, subCurr + 1)
+      const won = inputMap.get(currentIteration)
+      for (let j = 1; j <= won; j++) {
+        const subCurr = numberOfScratchPads.get(currentIteration + j) || 0
+        numberOfScratchPads.set(currentIteration + j, subCurr + 1)
       }
     }
-    currentIteration++
   }
 
   return Array.from(numberOfScratchPads.values()).reduce((a, b) => a + b, 0)
