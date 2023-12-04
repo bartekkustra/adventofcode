@@ -1,5 +1,5 @@
 {
   "watch": ["2015", "2020", "2021", "2022", "2023", "utils"],
-  "ext": ".ts,.js",
+  "ext": ".ts,.js,.in,.sample,.sample2",
   "ignore": []
 }
