@@ -139,15 +139,16 @@ export const part2 = (input: Input): number => {
 
 const main = () => {
   const p0start = performance.now()
-  const p0 = parsedInput('in')
+  // const sample = parsedInput('sample')
+  const input = parsedInput('in')
   const p0end = performance.now()
 
   const p1start = performance.now()
-  const p1 = part1(parsedInput('in'))
+  const p1 = part1(input)
   const p1end = performance.now()
   
   const p2start = performance.now()
-  const p2 = part2(parsedInput('in'))
+  const p2 = part2(input)
   const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)

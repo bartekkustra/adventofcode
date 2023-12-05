@@ -9,8 +9,9 @@ const day = getDay(__dirname)
 const dir = `${year}/day${day}`
 const filename = `${dir}/${day}`
 
-export const parsedInput = (ext?: string): string[] => importFile(filename + '.' + ext).split('\n')
+type Input = string[]
 
+export const parsedInput = (ext: string): Input => importFile(filename + '.' + ext).split('\n')
 
 export const part1 = (input: string[]): number => {
 
@@ -27,26 +28,26 @@ const main = () => {
   const p0 = parsedInput('in')
   const p0end = performance.now()
 
-  const p1start = performance.now()
-  const p1 = part1(parsedInput('sample'))
-  const p1end = performance.now()
+  // const p1start = performance.now()
+  // const p1 = part1(parsedInput('sample'))
+  // const p1end = performance.now()
   
-  const p2start = performance.now()
-  const p2 = part2(parsedInput('sample'))
-  const p2end = performance.now()
+  // const p2start = performance.now()
+  // const p2 = part2(parsedInput('sample'))
+  // const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)
-  const p1time = (p1end - p1start).toFixed(3)
-  const p2time = (p2end - p2start).toFixed(3)
+  // const p1time = (p1end - p1start).toFixed(3)
+  // const p2time = (p2end - p2start).toFixed(3)
   console.log(`input: ${p0time}ms`)
   console.log('---')
-  console.log(`part1: ${p1time}ms`)
-  console.log('part1', p1)
-  console.log(`part2: ${p2time}ms`)
-  console.log('part2', p2)
+  // console.log(`part1: ${p1time}ms`)
+  // console.log('part1', p1)
+  // console.log(`part2: ${p2time}ms`)
+  // console.log('part2', p2)
   
-  updateTimes(p1time, p2time, dir)
-  updateMainBadge(year, day, {p1, p2})
+  // updateTimes(p1time, p2time, dir)
+  // updateMainBadge(year, day, {p1, p2})
 }
 
 if (require.main === module) {
