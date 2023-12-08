@@ -1,17 +1,30 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
+  "version": "1.0.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
+      "name": "Attach",
+      "port": 9229,
+      "request": "attach",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/2022/day05/index.js"
+      "type": "node"
     },
-  ],
+
+    {
+      "name": "TS-Node",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-node",
+      "runtimeArgs": [
+        "--transpile-only",
+        // if you use esm
+        "--esm" 
+      ],
+      "program": "${workspaceFolder}/2023/day05/index.ts",
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    }
+  ]
 }
