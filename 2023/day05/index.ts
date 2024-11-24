@@ -26,23 +26,32 @@ interface Range {
   end: number
 }
 
+const MAPPING_ORDER = [
+  'seed-to-soil',
+  'soil-to-fertilizer',
+  'fertilizer-to-water',
+  'water-to-light',
+  'light-to-temperature',
+  'temperature-to-humidity',
+  'humidity-to-location',
+]
+
 export const parsedInput = (ext: string): ParsedInput => {
   const input: string[] = importFile(filename + '.' + ext).split('\n\n')
   const seeds: number[] = input[0].split(': ')[1].split(' ').map(Number)
-
   const rest: Map<string, Conversion[]> = new Map()
 
-  input.slice(1).forEach(section => {
+  input.slice(1).forEach((section: string) => {
     const [key, values] = section.split(' map:\n')
     const map: Conversion[] = values
       .split('\n')
       .filter(Boolean)
-      .map(line => {
-        const l = line.split(' ').map(Number)
+      .map((line: string) => {
+        const [destination, source, length] = line.split(' ').map(Number)
         return {
-          destinationRangeStart: l[0],
-          sourceRangeStart: l[1],
-          rangeLength: l[2],
+          destinationRangeStart: destination,
+          sourceRangeStart: source,
+          rangeLength: length,
         }
       })
     
@@ -54,40 +63,17 @@ export const parsedInput = (ext: string): ParsedInput => {
 
 const getNextType = (conversion: string, currentValue: number, conversionMap: Map<string, Conversion[]>): number => {
   const map = conversionMap.get(conversion)
-  let possibleNextType = currentValue
+  let result = currentValue
+  
   map.forEach((range: Conversion) => {
-    if (currentValue >= range.sourceRangeStart && currentValue <= range.sourceRangeStart + range.rangeLength) {
+    const isInRange = currentValue >= range.sourceRangeStart && currentValue <= range.sourceRangeStart + range.rangeLength
+    
+    if (isInRange) {
       const nextType = range.destinationRangeStart + (currentValue - range.sourceRangeStart)
-      possibleNextType = nextType
+      result = nextType
     }
   })
-  return possibleNextType
-}
-
-const mappingOrder = [
-  'seed-to-soil',
-  'soil-to-fertilizer',
-  'fertilizer-to-water',
-  'water-to-light',
-  'light-to-temperature',
-  'temperature-to-humidity',
-  'humidity-to-location',
-]
-
-export const part1 = (input: ParsedInput): number => {
-  const seeds = input.seeds
-  let lowest = Infinity
-
-  seeds.forEach((seed: number) => {
-    let current = seed
-    mappingOrder.forEach((mapName: string) => {
-      current = getNextType(mapName, current, input.rest)
-    })
-    
-    lowest = Math.min(lowest, current)
-  })
-
-  return lowest
+  return result
 }
 
 const processRanges = (inputRanges: Range[], conversions: Conversion[]): Range[] => {
@@ -138,6 +124,22 @@ const processRanges = (inputRanges: Range[], conversions: Conversion[]): Range[]
   return outputRanges
 }
 
+export const part1 = (input: ParsedInput): number => {
+  const seeds = input.seeds
+  let lowest = Infinity
+
+  seeds.forEach((seed: number) => {
+    let current = seed
+    MAPPING_ORDER.forEach((mapName: string) => {
+      current = getNextType(mapName, current, input.rest)
+    })
+    
+    lowest = Math.min(lowest, current)
+  })
+
+  return lowest
+}
+
 export const part2 = (input: ParsedInput): number => {
   const seedRanges: Range[] = []
 
@@ -149,7 +151,7 @@ export const part2 = (input: ParsedInput): number => {
   }
 
   let currentRanges = seedRanges
-  for (const mapName of mappingOrder) {
+  for (const mapName of MAPPING_ORDER) {
     currentRanges = processRanges(currentRanges, input.rest.get(mapName))
   }
 
@@ -179,8 +181,8 @@ const main = () => {
   console.log(`part2: ${p2time}ms`)
   console.log('part2', p2)
   
-  // updateTimes(p1time, p2time, dir)
-  // updateMainBadge(year, day, {p1, p2})
+  updateTimes(p1time, p2time, dir)
+  updateMainBadge(year, day, {p1, p2})
 }
 
 if (require.main === module) {
