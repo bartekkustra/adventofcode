@@ -15,12 +15,18 @@ interface Conversion {
   sourceRangeStart: number
   rangeLength: number
 }
-interface parsedInput {
+
+interface ParsedInput {
   seeds: number[]
   rest: Map<string, Conversion[]>
 }
 
-export const parsedInput = (ext: string): parsedInput => {
+interface Range {
+  start: number
+  end: number
+}
+
+export const parsedInput = (ext: string): ParsedInput => {
   const input: string[] = importFile(filename + '.' + ext).split('\n\n')
   const seeds: number[] = input[0].split(': ')[1].split(' ').map(Number)
 
@@ -58,59 +64,96 @@ const getNextType = (conversion: string, currentValue: number, conversionMap: Ma
   return possibleNextType
 }
 
-export const part1 = (input: parsedInput): number => {
+const mappingOrder = [
+  'seed-to-soil',
+  'soil-to-fertilizer',
+  'fertilizer-to-water',
+  'water-to-light',
+  'light-to-temperature',
+  'temperature-to-humidity',
+  'humidity-to-location',
+]
+
+export const part1 = (input: ParsedInput): number => {
   const seeds = input.seeds
   let lowest = Infinity
 
   seeds.forEach((seed: number) => {
-    const seed2soil = getNextType('seed-to-soil', seed, input.rest)
-    const soil2fertilizer = getNextType('soil-to-fertilizer', seed2soil, input.rest)
-    const fertilizer2water = getNextType('fertilizer-to-water', soil2fertilizer, input.rest)
-    const water2light = getNextType('water-to-light', fertilizer2water, input.rest)
-    const light2temperature = getNextType('light-to-temperature', water2light, input.rest)
-    const temperature2humidity = getNextType('temperature-to-humidity', light2temperature, input.rest)
-    const humidity2location = getNextType('humidity-to-location', temperature2humidity, input.rest)
-
-    // console.log({
-    //   seed: input.seeds[0],
-    //   soil: seed2soil,
-    //   fertilizer: soil2fertilizer,
-    //   water: fertilizer2water,
-    //   light: water2light,
-    //   temperature: light2temperature,
-    //   humidity: temperature2humidity,
-    //   location: humidity2location,
-    // })
-    lowest = Math.min(lowest, humidity2location)
+    let current = seed
+    mappingOrder.forEach((mapName: string) => {
+      current = getNextType(mapName, current, input.rest)
+    })
+    
+    lowest = Math.min(lowest, current)
   })
-
 
   return lowest
 }
 
-export const part2 = (input: parsedInput): number => {
-  const seedsPairs: [number, number][] = []
-  input.seeds.forEach((seed, index) => {
-    if (index % 2 === 0) {
-      seedsPairs.push([seed, input.seeds[index + 1]])
+const processRanges = (inputRanges: Range[], conversions: Conversion[]): Range[] => {
+  const outputRanges: Range[] = []
+
+  for (const range of inputRanges) {
+    let unprocessedRanges: Range[] = [range]
+
+    for (const conversion of conversions) {
+      const conversionEnd = conversion.sourceRangeStart + conversion.rangeLength - 1
+      const newUnprocessed: Range[] = []
+
+      for (const current of unprocessedRanges) {
+        // before conversion range
+        if (current.start < conversion.sourceRangeStart) {
+          newUnprocessed.push({
+            start: current.start,
+            end: Math.min(current.end, conversion.sourceRangeStart - 1)
+          })
+        }
+
+        // overlapping range
+        if (current.end >= conversion.sourceRangeStart && current.start <= conversionEnd) {
+          const overlapStart = Math.max(current.start, conversion.sourceRangeStart)
+          const overlapEnd = Math.min(current.end, conversionEnd)
+          outputRanges.push({
+            start: conversion.destinationRangeStart + overlapStart - conversion.sourceRangeStart,
+            end: conversion.destinationRangeStart + overlapEnd - conversion.sourceRangeStart,
+          })
+        }
+
+        // after conversion range
+        if (current.end > conversionEnd) {
+          newUnprocessed.push({
+            start: Math.max(current.start, conversionEnd + 1),
+            end: current.end,
+          })
+        }
+      }
+
+      unprocessedRanges = newUnprocessed
     }
-  })
- 
-  let lowest = Infinity
-  
-  for (const [start, range] of seedsPairs) {
-    for (let i = start; i < start + range; i++) {
-      const seed2soil = getNextType('seed-to-soil', i, input.rest)
-      const soil2fertilizer = getNextType('soil-to-fertilizer', seed2soil, input.rest)
-      const fertilizer2water = getNextType('fertilizer-to-water', soil2fertilizer, input.rest)
-      const water2light = getNextType('water-to-light', fertilizer2water, input.rest)
-      const light2temperature = getNextType('light-to-temperature', water2light, input.rest)
-      const temperature2humidity = getNextType('temperature-to-humidity', light2temperature, input.rest)
-      const humidity2location = getNextType('humidity-to-location', temperature2humidity, input.rest)
-      lowest = Math.min(lowest, humidity2location)
-    }
+
+    // add the remaining ranges to the output
+    outputRanges.push(...unprocessedRanges)
   }
-  return lowest
+
+  return outputRanges
+}
+
+export const part2 = (input: ParsedInput): number => {
+  const seedRanges: Range[] = []
+
+  for (let i = 0; i < input.seeds.length; i += 2) {
+    seedRanges.push({
+      start: input.seeds[i],
+      end: input.seeds[i] + input.seeds[i + 1] - 1,
+    })
+  }
+
+  let currentRanges = seedRanges
+  for (const mapName of mappingOrder) {
+    currentRanges = processRanges(currentRanges, input.rest.get(mapName))
+  }
+
+  return Math.min(...currentRanges.map(r => r.start))
 }
 
 const main = () => {
@@ -119,11 +162,11 @@ const main = () => {
   const p0end = performance.now()
 
   const p1start = performance.now()
-  const p1 = part1(parsedInput('sample'))
+  const p1 = part1(parsedInput('in'))
   const p1end = performance.now()
   
   const p2start = performance.now()
-  const p2 = part2(parsedInput('sample'))
+  const p2 = part2(parsedInput('in'))
   const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)
