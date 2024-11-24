@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "day": "runDay.bat",
-    "debug": "nodemon --exec \"node --inspect-brk=0.0.0.0:9229 --require ts-node/register 2023/day05/index.ts\"",
+    "day": "./runDay.sh",
     "day:test": "runTest.bat",
     "test": "jest",
     "test:watch": "jest --watch",
+    "new": "./newDay.sh",
     "tsc": "tsc"
   },
   "keywords": [],
