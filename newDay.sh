@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if both year and day are provided
-if [$# -ne 2 ]; then
+if [ $# -ne 2 ]; then
   echo "Usage: ./newDay.sh <year> <day>"
   echo "Example: ./newDay.sh 2024 01"
   exit 1
@@ -11,6 +11,11 @@ YEAR=$1
 DAY=$(printf "%02d" $2)
 TEMPLATE_DIR="$YEAR/_template"
 TARGET_DIR="$YEAR/day$DAY"
+
+if [ -d "$TARGET_DIR" ]; then
+  echo "Directory $TARGET_DIR already exists"
+  exit 1
+fi
 
 # Create directory if it doesn't exist
 mkdir -p "$TARGET_DIR"
