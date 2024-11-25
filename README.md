@@ -30,6 +30,8 @@ I'll be posting my solutions and approaches to solve tasks in Advent of Code. I'
 
 [![2022](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2022.json)](https://adventofcode.com/2022/about)
 
+[![2023](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2023.json)](https://adventofcode.com/2023/about)
+
 
 
 # About me
