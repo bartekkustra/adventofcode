@@ -61,8 +61,9 @@ export const parsedInput = (ext: string): ParsedInput => {
   return { seeds, rest }
 }
 
-const getNextType = (conversion: string, currentValue: number, conversionMap: Map<string, Conversion[]>): number => {
+export const getNextType = (conversion: string, currentValue: number, conversionMap: Map<string, Conversion[]>): number => {
   const map = conversionMap.get(conversion)
+  if (!map) throw new Error(`Conversion type "${conversion}" not found`)
   let result = currentValue
   
   map.forEach((range: Conversion) => {
@@ -76,7 +77,7 @@ const getNextType = (conversion: string, currentValue: number, conversionMap: Ma
   return result
 }
 
-const processRanges = (inputRanges: Range[], conversions: Conversion[]): Range[] => {
+export const processRanges = (inputRanges: Range[], conversions: Conversion[]): Range[] => {
   const outputRanges: Range[] = []
 
   for (const range of inputRanges) {
