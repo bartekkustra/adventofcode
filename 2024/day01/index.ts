@@ -34,30 +34,18 @@ export const part1 = (input: Input): number => {
   lefts = lefts.sort((a, b) => a - b)
   rights = rights.sort((a, b) => a - b)
 
-  let sum = 0
-  lefts.forEach((left, index) => {
-    sum += Math.abs(left - rights[index])
-  })
-  return sum
+  return lefts.reduce((sum, left, i) => sum + Math.abs(left - rights[i]), 0)
 }
 
 export const part2 = (input: Input): number => {
   const { lefts, rights } = input
-  let rightsMap = new Map<number, number>()
-  for (const r of rights) {
-    if (rightsMap.has(r)) {
-      const curr = rightsMap.get(r)
-      rightsMap.set(r, curr + 1)
-    } else {
-      rightsMap.set(r, 1)
-    }
-  }
-  let similarityScore = 0
-  for (const left of lefts) {
-    similarityScore += left * (rightsMap.get(left) || 0)
-  }
+  
+  const rightsMap = rights.reduce((map, r) => {
+    map.set(r, (map.get(r) || 0) + 1)
+    return map
+  }, new Map<number, number>())
 
-  return similarityScore
+  return lefts.reduce((sum, left) => sum + left * (rightsMap.get(left) || 0), 0)
 }
 
 const main = () => {
