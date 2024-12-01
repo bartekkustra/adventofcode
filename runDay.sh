@@ -9,4 +9,4 @@ if [ -z "$DAY" ]; then
   exit 1
 fi
 
-npx nodemon --exec "ts-node" "$YEAR/day$DAY/index.ts"
+npx nodemon --watch "$YEAR/day$DAY" --ext "ts" --exec "ts-node" "$YEAR/day$DAY/index.ts"
