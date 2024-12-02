@@ -9,16 +9,16 @@ const day = getDay(__dirname)
 const dir = `${year}/day${day}`
 const filename = `${dir}/${day}`
 
-type Input = string[]
+type Input = any
 
 export const parsedInput = (ext: string): Input => importFile(filename + '.' + ext).split('\n')
 
-export const part1 = (input: string[]): number => {
+export const part1 = (input: Input): number => {
 
   return 0
 }
 
-export const part2 = (input: string[]): number => {
+export const part2 = (input: Input): number => {
 
   return 0
 }
