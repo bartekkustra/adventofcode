@@ -14,12 +14,57 @@ type Input = any
 export const parsedInput = (ext: string): Input => importFile(filename + '.' + ext)
 
 
-export const part1 = (input: Input): number => input
+export const regex_part1 = (input: Input): number => input
   .match(/mul\(\d+,\d+\)/g)
   .map((s: string) => s.match(/\d+/g).map(Number))
   .reduce((acc: number, [a, b]: number[]) => acc + a * b, 0)
 
-export const part2 = (input: Input): number => {
+export const part1 = (input: Input): number => {
+  let sum = 0
+  let i = 0
+  
+  while (i < input.length) {
+    // Look for "mul(" pattern
+    if (input[i] === 'm' && input[i + 1] === 'u' && input[i + 2] === 'l' && input[i + 3] === '(') {
+      i += 4 // skip past "mul("
+      let num1 = 0
+      let num2 = 0
+      let tempI = i
+      
+      // Parse first number
+      if (input[tempI] >= '0' && input[tempI] <= '9') {
+        while (input[tempI] >= '0' && input[tempI] <= '9') {
+          num1 = num1 * 10 + (input[tempI].charCodeAt(0) - '0'.charCodeAt(0))
+          tempI++
+        }
+        
+        // Check for comma
+        if (input[tempI] === ',') {
+          tempI++
+          
+          // Parse second number
+          if (input[tempI] >= '0' && input[tempI] <= '9') {
+            while (input[tempI] >= '0' && input[tempI] <= '9') {
+              num2 = num2 * 10 + (input[tempI].charCodeAt(0) - '0'.charCodeAt(0))
+              tempI++
+            }
+            
+            // Check for closing parenthesis
+            if (input[tempI] === ')') {
+              sum += num1 * num2
+              i = tempI
+            }
+          }
+        }
+      }
+    }
+    i++
+  }
+  
+  return sum
+}
+
+export const regex_part2 = (input: Input): number => {
   const inp = input.match(/(mul\(\d+,\d+\))|(don't\(\))|(do\(\))/g)
   let mulEnabled = true
   let mulSum = 0
@@ -33,6 +78,70 @@ export const part2 = (input: Input): number => {
   }
 
   return mulSum
+}
+
+export const part2 = (input: Input): number => {
+  let sum = 0
+  let i = 0
+  let mulEnabled = true
+  
+  while (i < input.length) {
+    // Check for "don't()"
+    if (input[i] === 'd' && input[i + 1] === 'o' && input[i + 2] === 'n' && 
+        input[i + 3] === '\'' && input[i + 4] === 't' && input[i + 5] === '(' && 
+        input[i + 6] === ')') {
+      mulEnabled = false
+      i += 7
+      continue
+    }
+    
+    // Check for "do()"
+    if (input[i] === 'd' && input[i + 1] === 'o' && input[i + 2] === '(' && 
+        input[i + 3] === ')') {
+      mulEnabled = true
+      i += 4
+      continue
+    }
+    
+    // Check for "mul(" when enabled
+    if (mulEnabled && input[i] === 'm' && input[i + 1] === 'u' && 
+        input[i + 2] === 'l' && input[i + 3] === '(') {
+      i += 4
+      let num1 = 0
+      let num2 = 0
+      let tempI = i
+      
+      // Parse first number
+      if (input[tempI] >= '0' && input[tempI] <= '9') {
+        while (input[tempI] >= '0' && input[tempI] <= '9') {
+          num1 = num1 * 10 + (input[tempI].charCodeAt(0) - '0'.charCodeAt(0))
+          tempI++
+        }
+        
+        // Check for comma
+        if (input[tempI] === ',') {
+          tempI++
+          
+          // Parse second number
+          if (input[tempI] >= '0' && input[tempI] <= '9') {
+            while (input[tempI] >= '0' && input[tempI] <= '9') {
+              num2 = num2 * 10 + (input[tempI].charCodeAt(0) - '0'.charCodeAt(0))
+              tempI++
+            }
+            
+            // Check for closing parenthesis
+            if (input[tempI] === ')') {
+              sum += num1 * num2
+              i = tempI
+            }
+          }
+        }
+      }
+    }
+    i++
+  }
+  
+  return sum
 }
 
 const main = () => {
