@@ -150,11 +150,11 @@ const main = () => {
   const p0end = performance.now()
 
   const p1start = performance.now()
-  const p1 = part1(parsedInput('in'))
+  const p1 = regex_part1(parsedInput('in'))
   const p1end = performance.now()
   
   const p2start = performance.now()
-  const p2 = part2(parsedInput('in'))
+  const p2 = regex_part2(parsedInput('in'))
   const p2end = performance.now()
   
   const p0time = (p0end - p0start).toFixed(3)
