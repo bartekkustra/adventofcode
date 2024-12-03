@@ -30,25 +30,51 @@ const checkLineValidation = (line: number[]): boolean => {
   return true;
 }
 
+const checkLineValidationWithSkip = (line: number[], skipIndex: number = -1): boolean => {
+  if (line.length < 2) return true;
+  
+  // Get first valid pair to determine direction
+  let prev = skipIndex === 0 ? line[1] : line[0];
+  let i = skipIndex === 0 ? 2 : 1;
+  
+  // If first two non-skipped numbers aren't found, return false
+  if (i >= line.length) return false;
+  
+  const isAscending = (skipIndex === 1) 
+    ? line[0] < line[2]  // skip index 1
+    : line[skipIndex === 0 ? 1 : 0] < line[skipIndex === 0 ? 2 : 1];  // handle skip at 0
+    
+  for (; i < line.length; i++) {
+    if (i === skipIndex) continue;
+    
+    const diff = line[i] - prev;
+    if ((isAscending && diff <= 0) || (!isAscending && diff >= 0) || 
+        Math.abs(diff) > 3 || Math.abs(diff) < 1) {
+      return false;
+    }
+    prev = line[i];
+  }
+  
+  return true;
+}
+
 export const part1 = (input: Input): number => input.reduce((validCount: number, line: number[]) => validCount + (checkLineValidation(line) ? 1 : 0), 0)
 
-export const part2 = (input: Input): number => input.reduce((validCount: number, line: number[]) => {
-    if (checkLineValidation(line)) return validCount + 1
+export const part2 = (input: Input): number => {
+  return input.reduce((validCount: number, line: number[]) => {
+    if (checkLineValidationWithSkip(line)) return validCount + 1;
 
-    const lineSize = line.length
-    for (let i = 0; i < lineSize; i++) {
-      const subLine = i === 0
-        ? line.slice(1)
-        : i === lineSize - 1
-          ? line.slice(0, -1)
-          : [...line.slice(0, i), ...line.slice(i + 1)]
-
-      if (checkLineValidation(subLine)) {
-        return validCount + 1
+    for (let i = 1; i < line.length; i++) {
+      const diff = line[i] - line[i - 1];
+      if ((line[0] < line[1] && diff <= 0) || (line[0] > line[1] && diff >= 0) || 
+          Math.abs(diff) > 3 || Math.abs(diff) < 1) {
+        return validCount + (checkLineValidationWithSkip(line, i) ? 1 : 0);
       }
     }
-    return validCount
-  }, 0)
+    
+    return validCount;
+  }, 0);
+}
 
 const main = () => {
   const p0start = performance.now()
