@@ -10,11 +10,11 @@ const SAMPLE_RESULTS = {
 
 describe(TODAY, () => {
   it('part1', () => {
-    const result = part1(parsedInput)
+    const result = part1(parsedInput('sample'))
     expect(result).toBe(SAMPLE_RESULTS.part1)
   })
   it('part2', () => {
-    const result = part2(parsedInput)
+    const result = part2(parsedInput('sample'))
     expect(result).toBe(SAMPLE_RESULTS.part2)
   })
 })
