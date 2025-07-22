@@ -26,7 +26,7 @@ describe('importFile', () => {
   it('should throw an error if file parsing fails', () => {
     const directory = 'data'
     const filename = 'input.txt'
-    const expectedError = 'Error file parsing file - Error: Error parsing file'
+    const expectedError = 'Error parsing file - Error: Error parsing file'
 
     // Mock the readFileSync function to throw an error
     jest.spyOn(fs, 'readFileSync').mockImplementationOnce(() => {

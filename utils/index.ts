@@ -18,7 +18,7 @@ export const importFile = (
   try {
     return readFileSync(path, { encoding: 'utf-8' }).replace(/\r/g, '')
   } catch (err) {
-    throw new Error(`Error file parsing file - ${err}`)
+    throw new Error(`Error parsing file - ${err}`)
   }
 }
 
