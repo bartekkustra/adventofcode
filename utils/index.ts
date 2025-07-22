@@ -51,6 +51,11 @@ export const updateMainBadge = async (year: number, day: string, parts: { p1: an
     currentCompletion = readFileSync('./utils/completion.json', {encoding: 'utf-8'})
   } catch (error) {
     console.error('Error parsing file', error)
+    return
+  }
+
+  if (!currentCompletion) {
+    return
   }
 
   const parsedData = JSON.parse(currentCompletion)
