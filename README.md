@@ -13,6 +13,43 @@
 # About the challenge
 I'll be posting my solutions and approaches to solve tasks in Advent of Code. I'll do my best to differentiate between part 1 and part 2 (as each task consists of two parts), but I can't promise anything here ;) My main language used in solving that is going to be TypeScript, but I might use Python on some occasions when node is just too slow...
 
+## Quick Start
+
+### Prerequisites
+- Node.js 16+
+- npm
+
+### Setup
+```bash
+npm install
+```
+
+### Create a new day
+```bash
+npm run new <year> <day>
+# Example: npm run new 2025 1
+```
+
+### Run a day (with hot reload)
+```bash
+npm run day <year> <day>
+# Example: npm run day 2025 1
+```
+
+### Run tests
+```bash
+npm run test:day <year> <day>
+# Example: npm run test:day 2025 1
+```
+
+### Run all days in a year
+```bash
+npm run all <year>
+# Example: npm run all 2025
+```
+
+📖 **For detailed documentation, see [scripts/README.md](scripts/README.md)**
+
 # Previous years
 [![2023](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2023.json)](https://adventofcode.com/2023/about)
 

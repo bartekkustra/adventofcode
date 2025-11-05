@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs'
 
-export const LATEST_YEAR = 2024
+export const LATEST_YEAR = 2025
 
 export const blocks = {
   full: '█',

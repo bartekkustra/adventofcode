@@ -4,24 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "day": "./runDay.sh",
-    "day:test": "runTest.bat",
+    "new": "scripts/new-day.sh",
+    "day": "scripts/run-day.sh",
+    "day:debug": "scripts/run-day.sh",
     "test": "jest",
+    "test:day": "scripts/run-test.sh",
     "test:watch": "jest --watch",
-    "new": "./newDay.sh",
-    "tsc": "tsc"
+    "all": "scripts/run-all.sh",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^2.9.4",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",
+    "@types/lodash": "^4.14.202",
+    "@types/md5": "^2.3.5",
+    "@types/node": "^20.10.4",
+    "@types/uuid": "^9.0.7",
     "eslint": "^7.15.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",

@@ -1,0 +1,1 @@
+Paste your puzzle input here from https://adventofcode.com/YYYY/day/D/input
