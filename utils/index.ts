@@ -24,7 +24,10 @@ export const importFile = (
 
 
 export const updateTimes = async (p1: string, p2: string, dir: string): Promise<void> => {
-  const readme = `## TypeScript\n[![Part 1](https://img.shields.io/badge/Part%201-${p1}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${p2}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
+  // URL-encode the time strings (handles μs symbol)
+  const p1Encoded = encodeURIComponent(p1)
+  const p2Encoded = encodeURIComponent(p2)
+  const readme = `## TypeScript\n[![Part 1](https://img.shields.io/badge/Part%201-${p1Encoded}-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${p2Encoded}-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
   try {
     writeFileSync(`${dir}/README.md`, readme)
   } catch (error) {
@@ -34,6 +37,27 @@ export const updateTimes = async (p1: string, p2: string, dir: string): Promise<
 
 export const getDay = (url: string) => {
   return url.replace(/(.*)([0-9]{2})$/, '$2')
+}
+
+/**
+ * Formats a time duration (in milliseconds) with appropriate units.
+ * - μs for times < 1ms
+ * - ms for times 1ms - 999ms
+ * - s for times >= 1000ms
+ */
+export const formatTime = (ms: number): string => {
+  if (ms < 1) {
+    // Convert to microseconds
+    const us = ms * 1000
+    return `${us.toFixed(3)}μs`
+  } else if (ms >= 1000) {
+    // Convert to seconds
+    const s = ms / 1000
+    return `${s.toFixed(3)}s`
+  } else {
+    // Keep as milliseconds
+    return `${ms.toFixed(3)}ms`
+  }
 }
 
 export const updateMainBadge = async (year: number, day: string, parts: { p1: any; p2: any }) => {
