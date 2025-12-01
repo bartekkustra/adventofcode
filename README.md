@@ -1,5 +1,5 @@
 # Latest puzzle
-[![2024](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2024.json)](https://adventofcode.com/2024/about)
+[![2025](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2025.json)](https://adventofcode.com/2025/about)
 
 ![](https://github.com/bartekkustra/adventofcode/blob/main/aoc.png?raw=true)
 
@@ -51,6 +51,8 @@ npm run all <year>
 📖 **For detailed documentation, see [scripts/README.md](scripts/README.md)**
 
 # Previous years
+[![2024](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2024.json)](https://adventofcode.com/2024/about)
+
 [![2023](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2023.json)](https://adventofcode.com/2023/about)
 
 [![2022](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/bartekkustra/adventofcode/main/.github/badges/2022.json)](https://adventofcode.com/2022/about)
