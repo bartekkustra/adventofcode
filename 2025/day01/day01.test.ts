@@ -6,8 +6,8 @@ const day = getDay(__dirname)
 
 // Expected results from sample input
 const SAMPLE_RESULTS = {
-  part1: 0,  // Update with expected result from puzzle
-  part2: 0,  // Update with expected result from puzzle
+  part1: 3,  // Update with expected result from puzzle
+  part2: 6,  // Update with expected result from puzzle
 }
 
 describe(`${year}/day${day}`, () => {

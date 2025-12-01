@@ -7,7 +7,7 @@ console.clear()
 const year = 2025  // Will be replaced by new-day.sh script
 const day = getDay(__dirname)
 const dir = `${year}/day${day}`
-const TRACK_PERFORMANCE = true  // Set to true to update badges
+const TRACK_PERFORMANCE = false  // Set to true to update badges
 
 // Types
 type Input = number[]
