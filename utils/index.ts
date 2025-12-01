@@ -49,14 +49,14 @@ export const formatTime = (ms: number): string => {
   if (ms < 1) {
     // Convert to microseconds
     const us = ms * 1000
-    return `${us.toFixed(1)}μs`
+    return `${us.toFixed(3)}μs`
   } else if (ms >= 1000) {
     // Convert to seconds
     const s = ms / 1000
-    return `${s.toFixed(2)}s`
+    return `${s.toFixed(3)}s`
   } else {
     // Keep as milliseconds
-    return `${ms.toFixed(2)}ms`
+    return `${ms.toFixed(3)}ms`
   }
 }
 
