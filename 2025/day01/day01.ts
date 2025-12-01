@@ -27,31 +27,25 @@ export const part1 = (input: Input): number => {
   let numberOfZeroes = 0
   let current = 50
   for (const change of input) {
-    current = (current + change) % 100
-    if ((current) % 100 === 0) numberOfZeroes++
+    current = current + change
+    if (current % 100 === 0) numberOfZeroes++
   }
   
   return numberOfZeroes
 }
 // Part 2
 export const part2 = (input: Input): number => {
-  let steps = []
   let numberOfZeroes = 0
   let current = 50
+  
   for (const change of input) {
-    let rotationsPastZero = 0
-    const before = Number(current)
-    const after = (before + change)
-    const diff = Math.abs(after - before)
-    current = (100 + (after % 100)) % 100
+    const after = current + change
     if (after >= 100) {
-      rotationsPastZero = Math.floor(after / 100)
-      numberOfZeroes += rotationsPastZero
+      numberOfZeroes += Math.floor(after / 100)
+    } else if (after <= 0) {
+      numberOfZeroes += Math.floor(Math.abs(after) / 100) + (current === 0 ? 0 : 1)
     }
-    if (after <= 0) {
-      rotationsPastZero = Math.floor(Math.abs(after) / 100) + (before === 0 ? 0 : 1)
-      numberOfZeroes += rotationsPastZero
-    }
+    current = ((after % 100) + 100) % 100
   }
   return numberOfZeroes
 }
