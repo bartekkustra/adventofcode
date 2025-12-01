@@ -1,4 +1,4 @@
-import { getDay, importFile, updateMainBadge, updateTimes } from '../../utils'
+import { formatTime, getDay, importFile, updateMainBadge, updateTimes } from '../../utils'
 import { performance } from 'perf_hooks'
 
 console.clear()
@@ -77,14 +77,14 @@ const main = () => {
   console.log('Part 2:', p2)
   console.log('')
 
-  const p1time = (t2 - t1).toFixed(3)
-  const p2time = (t3 - t2).toFixed(3)
-  console.log(`⏱️  Part 1: ${p1time}ms`)
-  console.log(`⏱️  Part 2: ${p2time}ms`)
+  const p1time = t2 - t1
+  const p2time = t3 - t2
+  console.log(`⏱️  Part 1: ${formatTime(p1time)}`)
+  console.log(`⏱️  Part 2: ${formatTime(p2time)}`)
 
   // Optional: Update performance badges
   if (TRACK_PERFORMANCE) {
-    updateTimes(p1time, p2time, dir)
+    updateTimes(formatTime(p1time), formatTime(p2time), dir)
     updateMainBadge(year, day, { p1, p2 })
   }
 }

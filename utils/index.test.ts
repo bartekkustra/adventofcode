@@ -1,5 +1,6 @@
 import {
   LATEST_YEAR,
+  formatTime,
   getDay,
   importFile,
   updateMainBadge,
@@ -40,11 +41,26 @@ describe('importFile', () => {
 
 describe('updateTimes', () => {
   it('should update the README file successfully', async () => {
-    const p1 = '100'
-    const p2 = '200'
+    const p1 = '100.00ms'
+    const p2 = '200.00ms'
     const dir = 'data'
 
-    const expectedReadme = `## TypeScript\n[![Part 1](https://img.shields.io/badge/Part%201-${p1}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${p2}ms-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
+    const expectedReadme = `## TypeScript\n[![Part 1](https://img.shields.io/badge/Part%201-${encodeURIComponent(p1)}-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${encodeURIComponent(p2)}-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
+
+    // Mock the writeFileSync function
+    jest.spyOn(fs, 'writeFileSync').mockImplementationOnce(() => {})
+
+    await updateTimes(p1, p2, dir)
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(`${dir}/README.md`, expectedReadme)
+  })
+
+  it('should URL-encode microsecond times correctly', async () => {
+    const p1 = '153.0μs'
+    const p2 = '377.0μs'
+    const dir = 'data'
+
+    const expectedReadme = `## TypeScript\n[![Part 1](https://img.shields.io/badge/Part%201-${encodeURIComponent(p1)}-informational)](https://adventofcode.com/${LATEST_YEAR}/)\n[![Part 2](https://img.shields.io/badge/Part%202-${encodeURIComponent(p2)}-informational)](https://adventofcode.com/${LATEST_YEAR}/)`
 
     // Mock the writeFileSync function
     jest.spyOn(fs, 'writeFileSync').mockImplementationOnce(() => {})
@@ -83,5 +99,32 @@ describe('getDay', () => {
     const result = getDay(url)
 
     expect(result).toBe(expectedDay)
+  })
+})
+
+describe('formatTime', () => {
+  it('should format sub-millisecond times in microseconds', () => {
+    expect(formatTime(0.153)).toBe('153.0μs')
+    expect(formatTime(0.377)).toBe('377.0μs')
+    expect(formatTime(0.001)).toBe('1.0μs')
+    expect(formatTime(0.9999)).toBe('999.9μs')
+  })
+
+  it('should format millisecond times in milliseconds', () => {
+    expect(formatTime(1)).toBe('1.00ms')
+    expect(formatTime(1.5)).toBe('1.50ms')
+    expect(formatTime(100.123)).toBe('100.12ms')
+    expect(formatTime(999.99)).toBe('999.99ms')
+  })
+
+  it('should format times >= 1000ms in seconds', () => {
+    expect(formatTime(1000)).toBe('1.00s')
+    expect(formatTime(1500)).toBe('1.50s')
+    expect(formatTime(12345)).toBe('12.35s')
+  })
+
+  it('should handle edge cases', () => {
+    expect(formatTime(0)).toBe('0.0μs')
+    expect(formatTime(0.0001)).toBe('0.1μs')
   })
 })
