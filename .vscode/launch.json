@@ -2,26 +2,14 @@
   "version": "1.0.0",
   "configurations": [
     {
-      "name": "Attach",
-      "port": 9229,
-      "request": "attach",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "node"
-    },
-
-    {
       "name": "TS-Node",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-node",
       "runtimeArgs": [
-        "--transpile-only",
-        // if you use esm
-        "--esm" 
+        "--transpile-only"
       ],
-      "program": "${workspaceFolder}/2023/day05/index.ts",
+      "args": ["${workspaceFolder}/2025/day02/day02.ts"],
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
