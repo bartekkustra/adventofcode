@@ -24,18 +24,23 @@ export const findSequencePart1 = (row: { start: number, end: number }): number =
   const {start, end} = row
   let sum = 0
   for (let i = start; i <= end; i++) {
-    const size = i.toString().length
+    const size = Math.floor(Math.log10(i)) + 1
     if(size % 2 !== 0) continue;
-    const split = size/2
-    const left = Math.floor(i / (10**split))
-    const right = i % (10**split)
-    // console.log({i, left, right, size, split})
-    if (left !== right) continue;
-    sum += i
+    
+    const times = 10**(size/2)
+    const left = Math.floor(i / times)
+    const right = i % times
+    
+    if (left === right) sum += i
   }
   return sum
 }
 
+/**
+  * Using pointers is slower but works.
+  * And by slower I mean >1.5s vs sub 500ms with Math.
+  * It wasn't until I finished the day02 that I'd realised the mistake I made with my original math approach.
+  */
 type TCache = Map<number, number[]>
 export const findSequencePart2 = (row: { start: number, end: number }): number => {
   const cache:TCache = new Map()
@@ -50,7 +55,7 @@ export const findSequencePart2 = (row: { start: number, end: number }): number =
 
   const uniques = new Set<number>()
   for (let i = start; i <= end; i++) {
-    const size = i.toString().length
+    const size = Math.floor(Math.log10(i)) + 1
     const divisions = ((): number[] => {
       if (cache.has(size)) return cache.get(size)
       cache.set(size, allDivisiblesOfNumber(size))
@@ -84,6 +89,39 @@ export const findSequencePart2 = (row: { start: number, end: number }): number =
   return [...uniques].reduce((acc:number, v:number) => acc + v, 0)
 }
 
+export const findSequencePart2Math = (row: {start: number, end: number }): number => {
+  const { start, end } = row
+  let sum = 0
+
+  for (let i = start; i <= end; i++) {
+    const size = Math.floor(Math.log10(i)) + 1
+
+    for (let partSize = 1; partSize <= size / 2; partSize++) {
+      if (size % partSize !== 0) continue
+
+      const mod = 10 ** partSize
+      const firstPart = i % mod
+
+      let temp = Math.floor(i / mod)
+      let isRepeating = true
+
+      while(temp > 0) {
+        if (temp % mod !== firstPart) {
+          isRepeating = false
+          break
+        }
+        temp = Math.floor(temp / mod)
+      }
+
+      if (isRepeating) {
+        sum += i
+        break
+      }
+    }
+  }
+  return sum
+}
+
 // Part 1
 export const part1 = (input: Input): number => {
   let sum = 0
@@ -96,8 +134,8 @@ export const part1 = (input: Input): number => {
 // Part 2
 export const part2 = (input: Input): number => {
   let sum = 0
-  // sum += findSequencePart2({start: 222220, end: 222220 })
-  sum += input.reduce((acc: number, curr: {start: number, end: number}) => acc + findSequencePart2(curr), 0)
+  // sum += findSequencePart2Math({start: 123123, end: 123123 })
+  sum += input.reduce((acc: number, curr: {start: number, end: number}) => acc + findSequencePart2Math(curr), 0)
   return sum
 }
 
