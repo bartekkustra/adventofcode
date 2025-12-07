@@ -17,6 +17,10 @@ export const parseInput = (raw: string): Input => {
   return raw.split('\n').map(x => x.split('').map(Number))
 }
 
+/**
+ * original hardcoded approach to part 1
+ * @deprecated
+ */
 export const findHighestPair = (arr: number[]): number => {
   let left = arr[0]
   let right = arr[1]
@@ -41,20 +45,45 @@ export const findHighestPair = (arr: number[]): number => {
   return left * 10 + right
 }
 
+export const findHighestStack = (arr: number[], maxSize: number): number => {
+  let size = arr.length
+  let canRemove = size - maxSize
+
+  let stack: number[] = []
+  for (const digit of arr) {
+    while(stack.length > 0 && stack[stack.length - 1] < digit && canRemove > 0) {
+      stack.pop()
+      canRemove -= 1
+    }
+    stack.push(digit)
+  }
+
+  return Number(stack.slice(0, maxSize).join(''))
+}
+
 // Part 1
 export const part1 = (input: Input): number => {
+  const maxSize = 2
   let sum = 0
   // sum += findHighestPair(input[2])
   for (const battery of input) {
     // console.log('-------')
     sum += findHighestPair(battery)
+    // sum += findHighestStack(battery, maxSize)
   }
   return sum
 }
 
 // Part 2
 export const part2 = (input: Input): number => {
-  return 0
+  const maxSize = 12
+  let sum = 0
+
+  // sum += findHighestStack(input[0])
+  for (const battery of input) {
+    sum += findHighestStack(battery, maxSize)
+  }
+  return sum
 }
 
 // Main execution
