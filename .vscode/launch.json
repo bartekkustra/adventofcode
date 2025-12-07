@@ -9,7 +9,7 @@
       "runtimeArgs": [
         "--transpile-only"
       ],
-      "args": ["${workspaceFolder}/2025/day02/day02.ts"],
+      "args": ["${workspaceFolder}/2025/day03/day03.ts"],
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
